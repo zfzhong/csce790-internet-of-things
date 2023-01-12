@@ -1,0 +1,85 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+%\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+%\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=25mm,
+ bottom=25mm
+ }
+
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{enumerate}
+\usepackage{arcs}
+\usepackage{cancel}
+\usepackage{xfrac}
+\usepackage{amsthm}
+\usepackage{gensymb}
+\usepackage{xspace}
+%\usepackage{ctex}
+
+%SetFonts
+
+%SetFonts
+
+\usepackage[inline]{asymptote}
+
+
+\pagestyle{fancy}
+\fancyhf{}
+%\rhead{Teacher David @ 18601688612}
+\lhead{\leftmark}
+%\lfoot{Copyright \copyright 2021-2022 by Teacher David. All rights reserved.}
+
+\title{Course Notes}
+\author{Teacher David}
+\date{January 12, 2022}							% Activate to display a given date or no date
+
+\newcommand{\latex}{\LaTeX\xspace}
+
+
+\begin{document}
+\maketitle
+
+\section{Signals}
+To compare two signals, the only three key factors are: \emph{Amplitude}, \emph{Frequency}, and \emph{Phase}.
+
+\subsection{What is a phase?}
+\begin{center}
+\begin{asy}
+unitsize(50pt);
+pair o = (0,0);
+real r = 1.0;
+draw(circle(o, 1));
+draw(o -- dir(60)--(0.5,0), blue);
+draw((-2,0)--(2,0), arrow=Arrow());
+draw((0,-2)--(0,2), arrow=Arrow());
+draw(arc(o, 0.3, 0, 60), red);
+label("\small $\theta$", 0.4*dir(30), red);
+label("\small $t$", (0.5,0), S);
+\end{asy}
+\end{center}
+
+$2\pi$ angles per cycle;\\
+$f$ cycles per second;\\
+When time is at $t$ seconds, the angle is $\theta = 2\pi f t$, and the $\theta$ is called the \emph{Phase}.
+
+Phase is derived from frequency: $2\pi ft$.
+
+\textbf{We need another observer to capture both the amplitude and frequency. One from the $x$ dimension, one from the $y$ dimension.}
+
+
+
+
+\end{document} 

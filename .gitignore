@@ -1,0 +1,16 @@
+*~
+*.aux
+*.log
+*.pdf
+*.tex
+*.pre
+*.synctex.gz
+*.DS_Store
+*.asy
+*.prc
+*.out
+*.pbsdat
+*.js
+*.dvi
+*.eps
+*.png
