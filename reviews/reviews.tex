@@ -52,7 +52,8 @@
 
 \begin{document}
 %\maketitle
-\doublespacing
+%\doublespacing
+\onehalfspacing
 
 \section{Paper review, due 02/02/2023}
 \begin{center}
@@ -65,24 +66,53 @@
 Zifei (David) Zhong, B70365610\\
 
 \noindent \textbf{Summary:}\\
-Briefly summarize the main ideas and the approach.\\
+\emph{Briefly summarize the main ideas and the approach}.
+
+This paper presented a system named ``WalkCompass'', which combines human walk analysis, smart phone inertial sensors, and geographic location data to estimate the walking direction of a human in environments with magnetic influence. The authors claimed that estimating a human's walking direction with the smart phone she carries, without further assumptions on starting orientation or map information, is non-trival. They described the three major components (HWA, LDE, GDE) of the WalkCompass system in details. Especially, the presented the IMT (iterative magnetic triangulation) algorithm to solve the global direction. They provided thorough evaluations on the performance of WalkCompass and did comparisons with the smart phone's original compass.  WalkCompass  They also discussed the limitations of WalkCompass.  \\
 
 \noindent \textbf{Contributions:}\\
-What are the major issues addressed in the paper?\\
-Do you consider them important?\\
-Comment on the novelty, creativity, and technical depth of the paper.\\
+\emph{What are the major issues addressed in the paper?}
+
+This paper claimed that there was no general solution to estimate the walking direction of a human based on the smart phone she carries, and it provided the WalkCompass as a generally applicable solution. \\
+
+\noindent \emph{Do you consider them important?}
+
+The authors showed that previous works on this topic were either based on strong assumptions (maps, initial human direction, etc) or with dissatisfactory  performance. I am convinced that it is an interesting problem and I am quite excited to see the WalkCompass solves the problem nicely. \\
+
+\noindent \emph{Comment on the novelty, creativity, and technical depth of the paper.}
+
+The most novel invention of this paper is the IMT (iterative magnetic triangulation) algorithm that solves the global direction. Even if I thought it's possible, the IMT algorithm just gives me `aha' moment upon reading it!
+
+The authors presented the whole WalkCompass system nicely. I am impressed with the way they present the components of WalkCompass and explain how it works. It's a complicated system involving Human Walking analysis, inertial IMU data analysis, and iterative computation. They presented technical details with examples, and made the whole story easy to follow. Many details got presented. For example, the experiment to explain how HWA works, the analysis on walking steps, how accelerometer reflects the different stages of a walk cycle, and how measured compass vector (R) changes over distances are all details which make the whole story live.\\
+
+
 
 \noindent \textbf{Strengths and Weaknesses:}\\
-What are the paper’s strengths? Be brief.\\
-What are the paper's weaknesses? Be brief.\\
+\emph{What are the paper’s strengths? Be brief.}\\
+
+The paper provided a general solution to estimate human walking direction based on the smart phone she carries. The WalkCompass can estimate human's walking direction within about 5 steps and the performance is stable with small median errors. It is probably the first general solution that achieve this performance.\\
+
+\noindent \emph{What are the paper's weaknesses? Be brief.}
+
+The WalkCompass still has limitations. For example, it is unclear how it performs for the scenarios where people put smart phone in jacket and bags, and these scenarios are very common in daily life.\\
 
 \noindent \textbf{Evaluation:}\\
-Comment on the paper's evaluation methodology.\\
-Comment on the results.\\
+\emph{Comment on the paper's evaluation methodology.}
+
+The evaluation is quite thorough. They covered 15 different environments with 6 different users. They also provided evaluation for different special scenarios. For example, direction change, toying with the phone, walking on different surface, and even staircase and backward walking. In general, the evaluation is quite comprehensive and convincing. \\
+
+\noindent \emph{Comment on the results.}
+
+Given the problem of solving walking direction in environments with intense magnetic influence is a hard problem, the result of WalkCompass is excellent. Even though there are some cases WalkCompass didn't perform so well, it already demonstrated the potential of the system as a generally applicable solution. \\
 
 \noindent \textbf{Future works:}\\
-Are there any issues or directions left open?\\
-List a few possible extensions of this work.\\
+\emph{Are there any issues or directions left open?}\\
+I believe the walking direction should be solvable even when the phone is put in jacket or bag. The IMT algorithm might have room to improve.\\
+
+\noindent \emph{List a few possible extensions of this work.}
+
+ Applying WalkCompass on people with disabilities might work as well. With better compass in nowadays smart phone, the performance of WalkCompass could be improved.\\
+
 
 \noindent \textbf{Other comments or questions:}\\
 Any other comments, suggestions, or questions.\\
