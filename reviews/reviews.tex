@@ -117,6 +117,76 @@ I believe the walking direction should be solvable even when the phone is put in
 \noindent \textbf{Other comments or questions:}\\
 Any other comments, suggestions, or questions.\\
 
+\newpage
+\section{Paper review, due 02/09/2023}
+\begin{center}
+\noindent
+\textbf{\Large Paper title: Closing the Gaps in Inertial Motion Tracking}
+\end{center}
+
+
+\noindent \textbf{Student's name and ID: }\\
+Zifei (David) Zhong, B70365610\\
+
+\noindent \textbf{Summary:}\\
+\emph{Briefly summarize the main ideas and the approach}.
+
+This paper presented MUSE, a set of algorithms to track both the orientation and location of an moving object based on the IMU information of that object in 9 DoFs. With a complimentary filter design that combines Gyroscope and Magnetometer data for sensor fusion to estimate the global 3D orientation of moving objects. Experiments across a wide range of uncontrolled moving activities from both humans and things showed that MUSE could estimate global 3D orientation with low errors and outperformed the state-of-the-art methods. Based on its orientation estimation, MUSE also solved the location estimation of restricted moving activities with a particle filter design. MUSE achieved fair accuracy over a set of uncontrolled human activities subject to certain restrictions. \\
+
+\noindent \textbf{Contributions:}\\
+\emph{What are the major issues addressed in the paper?}
+
+The major issues addressed in this paper are: 1) Estimating the global 3D orientation of moving objects with IMU data. The estimations outperformed the state-of-the-art methods; 2) Estimating the location of a IMU (attached to a moving object subject to certain movement restrictions) purely based on data from  that a single IMU.\\
+
+\noindent \emph{Do you consider them important?}
+
+Yes. The authors spent a great amount of effort introducing the significance of the problems and I am convinced the orientation or location tracking based on IMU is very important. Given that nowadays almost every electronic device has an IMU attached, accurate and timely tracking of location and orientation will be included by more and more applications.\\
+
+\noindent \emph{Comment on the novelty, creativity, and technical depth of the paper.}
+
+In the first part, this paper presented a Magnetometer + Gyroscope fusion algorithm to estimate the orientation of an object based on its IMU data. The paper provided enough technical details for readers to understand the algorithm. The proposed algorithm outperformed the state-of-the-art $A^3$ approach. The author claimed that global 3D magnetic north is a better anchor than gravity.
+
+In the second part, this paper presented a novel particle filter approach to jointly track orientation and location. The insight that movement subject to certain restrictions provided opportunity to estimate location. The authors provided many details in designing the particle filter and how to make it computationally inexpensive. The technical details include aggregation, prediction, resampling, etc.
+
+Overall, the technical depth is sound and the novelty in the second part of the paper is excellent.\\
+
+\noindent \textbf{Strengths and Weaknesses:}\\
+\emph{What are the paper’s strengths? Be brief.}\\
+
+This paper has a great introduction to the ongoing research on IMU-based motion tracking, including the fundamentals of computing 3D orientation and location, the existing difficulties and challenges, and the start-of-the-art solutions. 
+
+It provided new approaches to track orientation and location based on information from a single IMU. The approaches are either novel or practically better than existing solutions.
+\\
+
+\noindent \emph{What are the paper's weaknesses? Be brief.}
+
+There several minor weaknesses: 1)  In evaluation of orientation estimation, the complementary filter perform badly. However, MUSE is also based on complementary filter for orientation estimation. It seems like a contradiction. 2) For evaluation of the location estimation, I would like to see how MUSE perform for other restricted motion activities other than arm movement.\\
+
+\noindent \textbf{Evaluation:}\\
+\emph{Comment on the paper's evaluation methodology.}
+
+The evaluation experiments are properly set up. For orientation estimation, the experiments covered a very wide range of scenarios: controlled motions, uncontrolled motions, human motions, and motions of things. 
+
+For location estimation, I would assume VICON marker-based tracking can track wrist watch as long as there is a marker on the watch. \\
+
+\noindent \emph{Comment on the results.}
+
+It's great to see that MUSE's magnetometer+gyroscope fusion worked better than $A^3$. Just that the bad performance of complementary filter is a bit contradict to MUSE since MUSE also uses complementary filter. Figure 17 it alone is not enough to prove that MUSE doesn't diverge error over time (To be convincing, more experiments data should be provided). \\
+
+\noindent \textbf{Future works:}\\
+\emph{Are there any issues or directions left open?}\\
+
+As the authors mentioned in several of their papers that strong magnetic interference will pollute the magnetometer data and cause bad performance of their proposals. A study on magnetic interference and is impact might be meaningful for research in this area.\\
+
+\noindent \emph{List a few possible extensions of this work.}
+
+The paper only evaluated their location estimation approach for wrist-wearing watches. It would be great to extend this approach for other movements.\\
+
+
+\noindent \textbf{Other comments or questions:}\\
+\emph{Any other comments, suggestions, or questions}.\\
+There is a typo `round' at the end of section 6.1. It should be `ground truth' in stead of `round truth'.
+
 
 
 
