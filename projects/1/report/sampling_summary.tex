@@ -89,7 +89,7 @@ For example, in Figure~\ref{fig:amplitude}(f), with 48k Hz sample rate, the 5 se
 \caption{48k Hz}
 \end{subfigure}
 
-\caption{Amplitude of audios with different sampling rates}
+\caption{Amplitude vs. \# of Samples for  audios with different sampling rates}
 \label{fig:amplitude}
 \end{figure}
 
@@ -149,5 +149,49 @@ Audio File & Duration & Sampling Rate & \# Samples & File Size (k) & Quality & M
 \end{tabular}
 \end{table}
 
+\section{Part Two: Separate Spoken Letters}
+To separate an audio file according to the spoken letters of the audio, we can first smooth the amplitude curve of the audio signal, and them split it into chunks based on the ``valley'' of the curve. This can be done by transforming the audio signals into the frequency domain via FFT, and remove all the high frequency components, and then transform it again via inverse FFT. 
+
+To select a fair frequency threshold as a marker to separate high frequency components, we can calculate the magnitude of each frequency and make sure that the low frequency components together contribute little (for example, less than $10^{-4}$) to the overall magnitude.  
+
+Once we have the frequency threshold identified, it's easy to develop an algorithm to split the audio file in linear time (plesse see the code implementation).
+
+\begin{figure}[ht]
+\centering
+\begin{subfigure}[b]{0.3\textwidth}
+\includegraphics[width=\textwidth]{imgs/u.jpg}
+\caption{`U'}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+\includegraphics[width=\textwidth]{imgs/s.jpg}
+\caption{`S'}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+\includegraphics[width=\textwidth]{imgs/c.jpg}
+\caption{`C'}
+\end{subfigure}
+\caption{Spectrogram of 3 audios files (U, S, C)}
+\label{fig:threeletters}
+\end{figure}
+
+Figure~\ref{fig:threeletters} shows the spectrogram of the three audio files split based on the spoken of letters `U', `S', and 'C'. Figure~\ref{fig:power} shows the audio power vs. the frequency components of each audio file.
+
+\begin{figure}[ht]
+\centering
+\begin{subfigure}[b]{0.3\textwidth}
+\includegraphics[width=\textwidth]{imgs/u-power.jpg}
+\caption{`U'}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+\includegraphics[width=\textwidth]{imgs/s-power.jpg}
+\caption{`S'}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+\includegraphics[width=\textwidth]{imgs/c-power.jpg}
+\caption{`C'}
+\end{subfigure}
+\caption{Power (dB) vs. Frequency}
+\label{fig:power}
+\end{figure}
 
 \end{document} 
