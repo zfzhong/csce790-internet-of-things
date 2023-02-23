@@ -189,5 +189,75 @@ There is a typo `round' at the end of section 6.1. It should be `ground truth' i
 
 
 
+\newpage
+\section{Paper review, due 02/23/2023}
+\begin{center}
+\noindent
+\textbf{\Large Paper title: ``FingerIO: Using Active Sonar for Fine-Grained finger Tracking''}
+\end{center}
+
+
+\noindent \textbf{Student's name and ID: }\\
+Zifei (David) Zhong, B70365610\\
+
+\noindent \textbf{Summary:}\\
+\emph{Briefly summarize the main ideas and the approach}.
+
+This paper presents an approach called \emph{FingerIO} which tracks the motion of a single finger to achieve the purpose of touchless interactions with mobile devices. This approach proposes to transmit the audio signals based on the OFDM (orthogonal frequency division multiplexing) technique, in the inaudible frequency range of 18-20 KHz. Two microphones are used to locate the finger in distance, and therefore can track the motion path of the finger. The approach does not require extra devices mounted on the finger. The authors implemented FingerIO on a prototyped smart watch and a Samsung Galaxy S4 smart phone. Evaluation results show that with FingerIO humans can interact with mobile devices with good accuracy (error within ~1 centimeter). \\
+
+\noindent \textbf{Contributions:}\\
+\emph{What are the major issues addressed in the paper?}
+
+The major issue addressed in this paper is instrumenting the microphones of consumer devices to track finger motions and hence make around-device interactions possible. The authors claim that this work does not require extra devices/sensors mounted on fingers.\\
+
+\noindent \emph{Do you consider them important?}
+
+Yes, I consider this work important and practical because it does not require extra instrumenting on fingers and it can be implemented on existing consumer smartphones.\\
+
+\noindent \emph{Comment on the novelty, creativity, and technical depth of the paper.}
+
+Comparing with existing work at the time this paper gets published (2016), the idea of this paper is quite novel because it does not require extra mounting devices for fingers. At that time, this paper probably is the first work that has made it possible.
+
+The leveraging over OFDM is reasonable. I am not sure there are previous work that applies OFDM to audio wave transmissions. If not, this is also very creative.
+
+This paper provided many details on the theory aspects of the wave transmission, the distance calculation, and prototype implementation. It also provided evaluation from several different aspects: accuracy, interaction surface area, effective distance, and interaction with interference.
+
+Overall, the ideas are creative, the implementation is clean, the evaluation is systematic, and the technical depth is excellent.\\
+
+\noindent \textbf{Strengths and Weaknesses:}\\
+\emph{What are the paper’s strengths? Be brief.}\\
+
+The strength of this paper is that it provided a solution for touchless interaction with mobile devices with a naked finger. And it is the first work that achieves this through an OFDM based ultrasonic approach. The approach is implemented on a consumer smartphone and thus it's very applicable.
+\\
+
+\noindent \emph{What are the paper's weaknesses? Be brief.}
+
+The weaknesses, as the authors acknowledged in the paper, is that it only tracks a single finger's movement, and it seems is not able to track even cursive writing of alphabets. This indicates that the application of FingerIO might be quite limited, or it requires further development to make it more generally applicable for touchless interaction with mobile devices. \\
+
+\noindent \textbf{Evaluation:}\\
+\emph{Comment on the paper's evaluation methodology.}
+
+The evaluation of this paper is presented in five aspects: 1) the accuracy of finger tracking; 2) the effective area of interaction surface; 3) effectiveness in occlusions; 4) false positive \& false negatives; 5) effectiveness in presence of interference.  For single-finger motion tracking, I consider their evaluation quite systematic.\\
+
+\noindent \emph{Comment on the results.}
+
+The proposed approach achieves great accuracy in identifying finger motions, with 0.8 cm median error for the experiment with smart phone and 1.2 cm median error for the experiment with prototyped smart watch. The largest error is about 1.4 cm for the experiment with smart phone, and I believe this demonstrates the effectiveness of the approach.
+
+For the interaction surface experiments, their results show that the effective area of interaction surface for the phone is about $0.5$ m$^2$. While this is reasonable, I am a bit surprised to see the interaction surface area for the  prototyped watch is about $0.5 \times 0.25$ m$^2$. The author briefly explained that the difference was due to separation and power level. I believe the author should provide more details on the difference between device specifications of the prototyped smart watch and the smartphone. 
+
+Other than that, the approach works in presence of occlusions, and in certain conditions it results false positive/negatives. I don't expect this simple finger tracking would handle complex situations. It's great the see the authors included them in the experiments.\\
+
+\noindent \textbf{Future works:}\\
+\emph{Are there any issues or directions left open?}\\
+
+I believe this is a good work to follow for understanding how single finger motion tracking gets working with ultrasound waves. After 6 years, tracking 3D finger motions becomes the main challenge.\\
+
+\noindent \emph{List a few possible extensions of this work.}
+
+Tracking 3D finger motions at the joint level with ultrasound and mmWave.\\
+\noindent \textbf{Other comments or questions:}\\
+\emph{Any other comments, suggestions, or questions}.
+
+
 
 \end{document} 
