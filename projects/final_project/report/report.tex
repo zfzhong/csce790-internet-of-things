@@ -1,0 +1,124 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+%\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+%\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=25mm,
+ bottom=25mm
+ }
+
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{enumerate}
+\usepackage{arcs}
+\usepackage{cancel}
+\usepackage{xfrac}
+\usepackage{amsthm}
+\usepackage{gensymb}
+\usepackage{xspace}
+\usepackage{hyperref}
+%\usepackage{ctex}
+
+%SetFonts
+
+%SetFonts
+
+\usepackage[inline]{asymptote}
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\leftmark}
+
+\title{3D Finger Motion Tracking Using Ultrasound and Millimeter-Wave Sensing}
+\author{(Project Proposal)\\ \\Zifei (David) Zhong and Guangyi (Simona) Chen}
+\date{February 16, 2022}							% Activate to display a given date or no date
+
+\newcommand{\latex}{\LaTeX\xspace}
+
+
+\begin{document}
+\maketitle
+
+\section{Motivation}
+In recent years, the importance and application of 3D finger motion tracking technology have expanded considerably. This technology has diverse applications in virtual reality, gaming, sign language recognition, physical therapy, and other fields. By utilizing advanced sensors and algorithms, it can accurately track the movement and position of individual fingers in three-dimensional space, leading to a wide range of innovative and practical applications.
+
+Although motion capture cameras offer precise tracking of finger motions, they suffer from privacy concerns~\cite{ref:cameraprivacy18}, which have led researchers to explore contactless sensing techniques based on mmWave or audio signals that are privacy-preserving and can be applied to dark environments or non-line-of-sight conditions. Recent research has focused on reconstructing 3D finger motion~\cite{ref:neuropose21, ref:sslotr22, ref:mm4arm23} instead of identifying hand gestures, as an approach that can successfully reconstruct 3D finger motion can solve any hand gesture identification application.
+
+To reconstruct 3D finger motion, many proposals rely on special devices worn by users, which limits their applications. In this project, we propose to reconstruct 3D finger motion precisely based on contactless sensing with both ultrasound and millimeter-wave techniques. We believe that the fusion of ultrasound and millimeter-wave can yield fine-grained results in reconstructing 3D finger motions.
+
+To the best of our knowledge, this is the first work to perform continuous precise 3D finger motion tracking through the fusion of ultrasound and millimeter-wave reflections.
+
+\section{Experiments}
+The millimeter wave device we use for experiment is IWR1443BOOST board, with 3 transmitter and 4 receiver antennas and transmitting frequency between 76 GHz to 86 GHz.
+
+\subsection{Experiment Parameters}
+
+For chirp transmission, each chirp lasts for 66 us, followed by a 100 us idle period. In total, each chirp transmission costs 166 us. In each frame, we usually have 128 chirps transmitted with a single transmitter, 64 chirps with two transmitters, or 32 chirps for three transmitters. With three transmitters, each frame costs $166\times 32 = 5312$ us. Since we reserve 40 ms for each frame, the duty cycle of each frame is then $\frac{166\times 32}{40\times 1000} = 13.28\%.$ We transmit 250 frames in total, and the whole process lasts for $250 \times 40 = 10000$ ms (10 seconds).
+
+However, the ramp-type analog-to-digital converter (also known as ramp-compare or time-base ADC) starts 6 us after the beginning of each chirp, and the useful transmission is hence $66 - 6 = 60$ us. With a frequency slope ($S$) 29.982 MHz/us, the bandwidth (maximum frequency difference) is $29.982 \times 60 = 1798.92$ MHz (the maximum bandwidth supported by the TI IWR1443BOOST board is 3959.88 MHz).
+
+With a sampling window of 60 us, the minimum frequency difference ($\Delta f$) that can be captured is $\frac{10^6}{60} \approx 1.7\times 10^4$ Hz, which corresponds to time difference $\Delta t = \frac{\Delta f}{S} = \frac{10^6}{60\times 29.982 \times 10^6} \approx 5.6\times 10^{-4}$ us, and this corresponds a distance $\Delta d = \frac{1}{2}\cdot c\cdot \Delta t = 3\times 10^8 \times 5.6\times 10^{-4}\times 10^{-6} = 8.4\times 10^{-2}$ meters (8.4 cm). It's easy to see that the best range resolution that a device with 4G Hz bandwidth can achieve is about 4 cm.
+
+With FMCW, the reflection chirp will be mixed with the transmitting chirp to form an intermediate frequency (IF), which has a frequency that is the difference of the frequency of the transmitting chirp and the frequency of the reflection chirp. The IF frequency ($f_i$) can be easily observed during an experiment, and thus we can calculate the distance of the obstacle that causes the reflection: 
+$$f_i = S\cdot \Delta t = S\cdot \frac{2d}{c} \qquad \Rightarrow \qquad d = \frac{c\cdot f_i}{2S}.$$
+
+Let's review briefly how the IF signal gets generated. On the mmWave device, there is a `mixer'  component that takes the reflected signal and the transmitting signal as inputs, and generates a mixed signal that is the \emph{multiplication} of the two input signals. Given two input signals 
+$$x_1 = \cos(\omega_1 t + \phi_1) \qquad \text{and}\qquad x_2 = \cos(\omega_2 t + \phi_2),$$
+the multiplied signal should be 
+\begin{align*}
+y = x_1 \cdot x_2  = & \cos(\omega_1 t + \phi_1) \cdot \cos(\omega_2 t + \phi_2) \\
+= & \frac{1}{2}\left(\cos\left[(\omega_1 t +\phi_1)+ (\omega_2 t +\phi_2)\right]+ \cos\left[(\omega_1 t +\phi_1)- (\omega_2 t +\phi_2)\right]\right)\\
+= & \frac{1}{2}\left(\cos\left[(\omega_1 +\omega_2) t + (\phi_1 +\phi_2)\right]+ \cos\left[(\omega_1 - \omega_2) t + (\phi_1 - \phi_2)\right]\right)
+\end{align*}
+
+Notice that the above resulted signal is essentially a wave with two very different frequencies: $(\omega_1 + \omega_2)$ and $(\omega_1 - \omega_2)$. In our mmWave experiments, $w_1$ and $w_2$ are frequencies between 77 GHz and 81 GHz, while the difference $(w_1 - w_2)$ is at most 4 GHz (the bandwidth of the TI IWR1443BOOST mmWave board is 4 GHz). The mixer component filters out the signal with frequency $(w_1 + w_2)$, and keeps the signal with frequency  $(w_1 - w_2)$ as the output IF signal. The output IF signal has a much lower frequency and it's easier to do sampling for signal processing purposes.
+
+We have a sample rate of 10000 ksps (kilo-samples per second), and we want to have 256 samples for each chirp. Effectively, for each chirp, our sampling duration is $256\times\frac{1}{10^4\cdot 10^3}\times 10^6 = 25.6$ us. (The useful transmission of each chirp is 60 us, and sampling only lasts for 25.6 us?)
+
+Assuming the transmitting signal is $A\cdot \cos(\omega t + )$
+
+Start frequency: 77 GHz.
+
+Every ADC sample is 4 byte (16-bit complex: 16-bit real part and 16-bit virtual part).
+
+
+\section{Notes on IWR1443BOOST FMCW}
+As explained in the mmWave Training Series module on Range Estimation, FMCW Radar transmits a continuous ramping frequency called a chirp. The difference between the instantaneous TX frequency and the instantaneous RX frequency (the delay being proportional to the distance of the object) forms the IF signal and the frequency peaks in the IF signal correspond to the distance to the objects from the sensor. Velocity and Angle are computed by measuring the phase variation in the reflected signal. The phase variation of the signal in time gives the velocity and the phase variation in space, i.e. across the different RX antennas, gives angle of arrival.
+
+The sensor FOV (Field of View) in Azimuth and Elevation depends upon Antenna Design. If by sweep in Azimuth and Elevation (not to be confused with the frequency sweep of the chirp signal) you meant that if there is a beam e.g. in a LIDAR system, that scans the azimuth and/or elevation, that's not the case here. The sensor gets reflection from the complete FOV (both Azimuth and Elevation) with every chirp and by performing the FFTs in sequence (Range, Doppler, and Angle) computes the 3D point Cloud returning the range, velocity and angle associated with each point.
+
+For the IWR1443BOOST EVM, the Azimuth FOV is about 120 degrees (i.e. +/- 60 degrees) and the Elevation FOV is about 30 degrees (i.e. +/- 15 degrees). The FOV can be made narrower or wider using a different antenna design based on application requirements.
+
+
+(From \url{https://publish.illinois.edu/radicaldata/}) The dataset uses an FMCW (frequency modulated continuous wave) radar. This radar has 3 transmit antennas and 4 receiving antennas. In the majority of our data, we only use 2 of the transmitting antennas on the azimuthal (horizontal) axis. Using time division multiplexing, the data can mimic a system with 1 transmitter and 8 receivers. We use custom software to collect and store the raw ADC samples.
+
+
+\section{Related Work}
+In recent years, there has been a growing interest in using acoustic-based sensing and machine learning techniques for hand gesture recognition. EchoFlex~\cite{ref:echoflex17} is one such system that combines ultrasound imaging and neural network techniques to classify a set of 10 discrete hand gestures with high accuracy. Researchers have also explored other ultrasound-based approaches, such as using the Micro-Doppler effect~\cite{ref:usgr19}, range-Doppler map~\cite{ref:hgr22}, machine learning~\cite{ref:mhgr18}, image corner feature detection~\cite{ref:usgdr21}, ultrasonic rangefinder~\cite{ref:ss12}, multiple receiver antenna~\cite{ref:usgr18}, or microphone array~\cite{ref:usgr17} to classify hand gestures.  Acoustic-based sensing and applications is generally discussed in~\cite{ref:absa20}. 
+
+There are also several studies that use millimeter wave technology for hand gesture recognition. In~\cite{ref:hgrmmv21, ref:slgrmmw22}, mmWave sensing based approaches are proposed to classify a given set of hand gestures. mmASL~\cite{ref:mmasl} is a system that uses 60 GHz millimeter-wave wireless signals to perform American Sign Language (ASL) recognition, while ExASL~\cite{ref:exasl20} recognizes sentence-level ASL. DeafSpaces~\cite{ref:deafspaces21} is another millimeter-wave-based system that can classify 15 different hand gestures. 
+
+Recent trend in hand gesture study is 3D finger motion tracking, such as NeuroPose~\cite{ref:neuropose21}, ssLOTR~\cite{ref:sslotr22}, and mm4arm~\cite{ref:mm4arm23}. In particular, mm4arm~\cite{ref:mm4arm23} tracks track 3D finger motion with a mmWave-based approach without relying on any wearables.
+
+
+Overall, these studies demonstrate the potential of using different sensing modalities and machine learning techniques to develop accurate and robust hand gesture recognition systems. However, none of them take advantages of both ultrasound and mmWave techniques to achieve joint-level fine-grain finger motion tracking.
+
+%\section{Motivation}
+%Motivation: (1) ASL recognition is important, good for the community with hearing disabilities. (2) Why mobile device and mmWave technology can help? (3) Current research has %limitations. (4) we propose ultrasound + mmWave, justify the reasons (goal is to improve accuracy).
+
+\bibliographystyle{plain}
+\bibliography{reference}
+
+\end{document} 
