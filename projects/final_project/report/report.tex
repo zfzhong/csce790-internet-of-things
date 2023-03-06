@@ -98,6 +98,67 @@ Every ADC sample is 4 byte (16-bit complex: 16-bit real part and 16-bit virtual 
 
 
 \section{Notes on IWR1443BOOST FMCW}
+\begin{center}
+\begin{asy}
+unitsize(22pt);
+defaultpen(linewidth(1pt));
+
+arrowbar hookhead = Arrow(HookHead, size=7, angle=20);
+arrowbar smallarrows = ArcArrows(size=4, angle=35);
+pen thinline = linewidth(0.6pt);
+
+real width = 9, height = 6;
+pair a1 = (-1, 0), a2 = a1 + (width, 0);
+pair b1 = (0, -1), b2= b1 + (0, height);
+draw(a1 -- a2, hookhead);
+draw(b1 -- b2, hookhead);
+label("time", a2/2+(0,-1), S);
+label(rotate(90)*"frequency", b2/2 -(1,0), W);
+
+label("$f_0$", a1, W);
+
+// Tx and Rx signals
+pair c1 = (0,0), c2 = (3,3), c3 = (3,0), c4 = (4.5,1.5);
+pair d1 = (1,0), d2 = (4,3), d3 =(4,0), d4 = (5.5,1.5);
+
+draw(c1 -- c2 -- c3 -- c4, red);
+draw(d1 -- d2 -- d3 -- d4, blue);
+
+// legend
+pair lb = (c4+d4)/2;
+Label laR = Label("{\small Rx signal}", position=EndPoint);
+draw((lb.x, lb.y+2.65)--(lb.x+1, lb.y+2.65), L=laR, blue);
+Label laT = Label("{\small Tx signal}", position=EndPoint);
+draw((lb.x, lb.y+2)--(lb.x+1, lb.y+2), L=laT, red);
+
+// chirp duration T
+Label la1 = Label("$T$", align=(0,0), position=MidPoint, filltype=Fill(white));
+draw((0,-0.5) -- (c3.x, c3.y-0.5), L=la1, arrow=smallarrows, bar=Bars, p=thinline);
+
+// Bandwith of FMCW
+Label la2 = Label("$B$", align=(0,0), position=MidPoint, filltype=Fill(white));
+draw ((-0.5,0) -- (-0.5, c2.y), L=la2, arrow=smallarrows, bar=Bars, p=thinline);
+draw(c2 -- (0, c2.y), dotted);
+
+// Time difference of the Tx and Rx signals
+Label la3 = Label("{\small $\Delta t$}", align=(0,1));
+draw((c2.x, c2.y+0.5) -- (d2.x, d2.y+0.5), L=la3, arrow=smallarrows, bar=Bars, p=thinline);
+
+// Frequency difference of the Tx/Rx signals
+draw((c2.x, c2.y-1) -- (0, c2.y-1), dotted);
+
+pair e1 = c3+0.7*(c4-c3), e2 = e1 - (0,1);
+Label la4 = Label("{\small $\Delta f$}", align=(0.6,0));
+draw((0.5, c2.y-1) -- (0.5, c2.y), L=la4, arrow=smallarrows, bar=Bars, p=thinline);
+\end{asy}
+\end{center}
+
+Let's assume the transmitting signal is $x(t) = \cos \psi (t)$, we have $$f(t) = f_0 + \frac{B}{T}\cdot t, \qquad \frac{d\psi(t)}{dt} = 2\pi\cdot f(t),$$ and thus 
+$$\psi(t) = \int f(t) dt = 2\pi \int (f_0+\frac{B}{T}\cdot t) dt = 2\pi f_0\cdot t + \frac{\pi B}{T}\cdot t^2.$$
+The transmitting signal is therefore
+$$x(t) = \cos (2\pi f_0\cdot t + \frac{\pi B}{T}\cdot t^2).$$
+
+
 As explained in the mmWave Training Series module on Range Estimation, FMCW Radar transmits a continuous ramping frequency called a chirp. The difference between the instantaneous TX frequency and the instantaneous RX frequency (the delay being proportional to the distance of the object) forms the IF signal and the frequency peaks in the IF signal correspond to the distance to the objects from the sensor. Velocity and Angle are computed by measuring the phase variation in the reflected signal. The phase variation of the signal in time gives the velocity and the phase variation in space, i.e. across the different RX antennas, gives angle of arrival.
 
 The sensor FOV (Field of View) in Azimuth and Elevation depends upon Antenna Design. If by sweep in Azimuth and Elevation (not to be confused with the frequency sweep of the chirp signal) you meant that if there is a beam e.g. in a LIDAR system, that scans the azimuth and/or elevation, that's not the case here. The sensor gets reflection from the complete FOV (both Azimuth and Elevation) with every chirp and by performing the FFTs in sequence (Range, Doppler, and Angle) computes the 3D point Cloud returning the range, velocity and angle associated with each point.
