@@ -60,8 +60,24 @@ To reconstruct 3D finger motion, many proposals rely on special devices worn by 
 
 To the best of our knowledge, this is the first work to perform continuous precise 3D finger motion tracking through the fusion of ultrasound and millimeter-wave reflections.
 
+\section{Fourier Transform}
+The \emph{Fourier Transform} takes a time domain signal and represents it in the frequency domain. Given a complex signal that is mixed from multiple sinusoidal signals (with different frequencies), the Fourier Transform helps disclose the frequency of each of the sinusoidal signals. One key assumption for Fourier Transform is that any complex signal is actually a linear combination of multiple simple sinusoidal signals, e.g., 
+$$x(t) = a_0 \cdot x_0(t) + a_1 \cdot x_1(t) + \cdots + a_n \cdot x_n(t),$$
+where $x(t)$ is a complex signal, the series $x_i(t)$ are simple sinusoidal signals, and $a_i$ is the coefficient of $x_i(t)$. The Fourier Transform simply reveals the value of each $a_i$.
+
+\subsection{Sampling}
+For Discrete Fourier Transform, for the time series of a signal, we have to sample it in the time domain to get an array of values. There are two key factors that affects the resulted array: sampling frequency $f_s$ and duration $T_s$ of the signal in sampling. The higher sample frequency, the more samples we can get in 1 second. The longer duration, the more samples we can get in total.
+
+For example, given a signal with duration of 5 seconds, we sample it at the rate of 1000 Hz. We should get 1000 samples per second, and totally we should get $5\times 1000 = 5000$ samples.
+
+In experiments, we can specify the sampling rate $f_s$ and the total number of samples $N$ that we plan to get, and then calculate $T_s = \frac{N}{f_s}$ to get the duration of the signal that we need for sampling. It's possible that there exists $i$ such that $x_i(t)$ is a sinusoidal wave with cycle duration $T_s$, and in this case the frequency of $x_i(t)$ is $\frac{1}{T_s} = \frac{f_s}{N}$, which is the lowest frequency that can be characterized by the sampling. All other higher frequencies are integer multiple of $\frac{f_s}{N}.$
+
+To achieve better frequency resolution, we can either decrease $f_s$ or increase $N$. Increasing $N$ means we will take more samples at given sampling frequency $f_s$. Given any $f_s$, the more samples we have, the better frequency resolution can be characterized. However, decreasing $f_s$ is a bit counter intuitive. We should notice that given total samples $N$, a smaller $f_s$ means longer time in signal to get total $N$ samples. Therefore, no matter decreasing $f_s$ or  increasing $N$ , fundamentally both requires the signal lasts for longer time for collecting samples.
+
+
+
 \section{Experiments}
-The millimeter wave device we use for experiment is IWR1443BOOST board, with 3 transmitter and 4 receiver antennas and transmitting frequency between 76 GHz to 86 GHz.
+The millimeter wave device we use for experiment is IWR1443BOOST board, with 3 transmitter and 4 receiver antennas and transmitting frequency between 76 GHz to 81 GHz.
 
 \subsection{Experiment Parameters}
 
@@ -71,8 +87,8 @@ However, the ramp-type analog-to-digital converter (also known as ramp-compare o
 
 With a sampling window of 60 us, the minimum frequency difference ($\Delta f$) that can be captured is $\frac{10^6}{60} \approx 1.7\times 10^4$ Hz, which corresponds to time difference $\Delta t = \frac{\Delta f}{S} = \frac{10^6}{60\times 29.982 \times 10^6} \approx 5.6\times 10^{-4}$ us, and this corresponds a distance $\Delta d = \frac{1}{2}\cdot c\cdot \Delta t = 3\times 10^8 \times 5.6\times 10^{-4}\times 10^{-6} = 8.4\times 10^{-2}$ meters (8.4 cm). It's easy to see that the best range resolution that a device with 4G Hz bandwidth can achieve is about 4 cm.
 
-With FMCW, the reflection chirp will be mixed with the transmitting chirp to form an intermediate frequency (IF), which has a frequency that is the difference of the frequency of the transmitting chirp and the frequency of the reflection chirp. The IF frequency ($f_i$) can be easily observed during an experiment, and thus we can calculate the distance of the obstacle that causes the reflection: 
-$$f_i = S\cdot \Delta t = S\cdot \frac{2d}{c} \qquad \Rightarrow \qquad d = \frac{c\cdot f_i}{2S}.$$
+With FMCW, the reflection chirp will be mixed with the transmitting chirp to form an intermediate frequency (IF), which has a frequency that is the difference of the frequency of the transmitting chirp and the frequency of the reflection chirp. The IF frequency ($\Delta f$) can be easily observed during an experiment, and thus we can calculate the distance of the obstacle that causes the reflection: 
+$$\Delta f = S\cdot \Delta t = S\cdot \frac{2d}{c} \qquad \Rightarrow \qquad d = \frac{c}{2S}\cdot \Delta f.$$
 
 Let's review briefly how the IF signal gets generated. On the mmWave device, there is a `mixer'  component that takes the reflected signal and the transmitting signal as inputs, and generates a mixed signal that is the \emph{multiplication} of the two input signals. Given two input signals 
 $$x_1 = \cos(\omega_1 t + \phi_1) \qquad \text{and}\qquad x_2 = \cos(\omega_2 t + \phi_2),$$
@@ -98,7 +114,38 @@ Every ADC sample is 4 byte (16-bit complex: 16-bit real part and 16-bit virtual 
 
 
 \section{Notes on IWR1443BOOST FMCW}
-\begin{center}
+
+\begin{table}[t]
+\centering
+\caption{Notations}
+\label{tab:notation}
+\vspace{4pt}
+\begin{tabular}{c|l|l}
+\hline
+\textbf{Symbol} & \textbf{Explanation} & \textbf{\centering Note} \\
+\hline
+\hline
+$c$ & speed of the light & $3\times 10^8$ meters per second\\
+\hline
+$d$ & distance between transmitter and obstacle & \\
+\hline
+$\Delta t$ &signal round-trip time wrt obstacle & \\
+\hline
+$\Delta f$ & frequency difference of the Tx/Rx signals & \\
+\hline
+$f_0$ & starting frequency & 77 GHz for TI IWR1443 board \\
+\hline
+$T$ & chirp's duration & 60 us in our experiment \\
+\hline
+$S$ & frequency increase pace (slope) & 29.982 MHz/us in our experiment\\
+\hline
+$B$ & bandwidth of a chirp, $B=T\cdot S$ & $29.982 \times 60 = 1.79892$ GHz \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
 \begin{asy}
 unitsize(22pt);
 defaultpen(linewidth(1pt));
@@ -138,7 +185,7 @@ draw((0,-0.5) -- (c3.x, c3.y-0.5), L=la1, arrow=smallarrows, bar=Bars, p=thinlin
 // Bandwith of FMCW
 Label la2 = Label("$B$", align=(0,0), position=MidPoint, filltype=Fill(white));
 draw ((-0.5,0) -- (-0.5, c2.y), L=la2, arrow=smallarrows, bar=Bars, p=thinline);
-draw(c2 -- (0, c2.y), dotted);
+draw(d2 -- (0, c2.y), dotted);
 
 // Time difference of the Tx and Rx signals
 Label la3 = Label("{\small $\Delta t$}", align=(0,1));
@@ -151,13 +198,30 @@ pair e1 = c3+0.7*(c4-c3), e2 = e1 - (0,1);
 Label la4 = Label("{\small $\Delta f$}", align=(0.6,0));
 draw((0.5, c2.y-1) -- (0.5, c2.y), L=la4, arrow=smallarrows, bar=Bars, p=thinline);
 \end{asy}
-\end{center}
+\caption{FMCW explanation}
+\label{fig: fmcw}
+\end{figure}
 
 Let's assume the transmitting signal is $x(t) = \cos \psi (t)$, we have $$f(t) = f_0 + \frac{B}{T}\cdot t, \qquad \frac{d\psi(t)}{dt} = 2\pi\cdot f(t),$$ and thus 
 $$\psi(t) = \int f(t) dt = 2\pi \int (f_0+\frac{B}{T}\cdot t) dt = 2\pi f_0\cdot t + \frac{\pi B}{T}\cdot t^2.$$
 The transmitting signal is therefore
 $$x(t) = \cos (2\pi f_0\cdot t + \frac{\pi B}{T}\cdot t^2).$$
 
+In reality, taking the TI IWR1443 board as an example, the transmitting bandwidth $B$ is determined by the chirp's duration and the slope that characterizes the increasing pace of the signal. Users can specify the slope and the duration of a chirp while operating the TI IWR1443 board.
+
+In experiment, the TI IWR1443 board transmits a signal $x(t_0)$ with frequency $f(t_0)$ to an obstacle and receives the signal bounced back from the obstacle. When the return signal arrives at the board at time $t_1$, the mixer component of the board will \emph{mix} the signal $x(t_0)$ with the transmitting signal at $t_1$, e.g., $x(t_1)$ with frequency $f(t_1)$, to generate an intermediate signal with frequency $\Delta f = f(t_1) - f(t_0)$. 
+
+From the TI IWR1443 board, it's easy to observe the intermediate signal's frequency $\Delta f$ (it's difficult to measure the round-trip time of the signal directly), and deduce the round-trip time of the signal 
+$$\Delta t = \frac{\Delta f}{S},$$
+and future deduce the distance from the transmitter to the obstacle 
+$$d = \frac{1}{2}\cdot \Delta t \cdot c = \frac{c}{2S}\cdot \Delta f.$$
+
+With the chirp transmitting bandwidth $B$, transmitting time $T$, the minimum frequency that can be captured by the device is 
+$$\Delta f_{min} = \frac{1}{T} = \frac{S}{B}, $$ and the minimum distance from an obstacle the device is able to capture is then 
+$$d_{min} = \frac{c}{2S}\cdot \Delta f_{min} = \frac{c}{2B},$$
+where bandwidth $B$ determines the minimum distance that can be captured by the device.
+
+\subsection{other notes}
 
 As explained in the mmWave Training Series module on Range Estimation, FMCW Radar transmits a continuous ramping frequency called a chirp. The difference between the instantaneous TX frequency and the instantaneous RX frequency (the delay being proportional to the distance of the object) forms the IF signal and the frequency peaks in the IF signal correspond to the distance to the objects from the sensor. Velocity and Angle are computed by measuring the phase variation in the reflected signal. The phase variation of the signal in time gives the velocity and the phase variation in space, i.e. across the different RX antennas, gives angle of arrival.
 
