@@ -40,6 +40,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \lhead{\leftmark}
+\cfoot{\thepage}
 
 \title{3D Finger Motion Tracking Using Ultrasound and Millimeter-Wave Sensing}
 \author{(Project Proposal)\\ \\Zifei (David) Zhong and Guangyi (Simona) Chen}
@@ -60,19 +61,22 @@ To reconstruct 3D finger motion, many proposals rely on special devices worn by 
 
 To the best of our knowledge, this is the first work to perform continuous precise 3D finger motion tracking through the fusion of ultrasound and millimeter-wave reflections.
 
-\section{Fourier Transform}
-The \emph{Fourier Transform} takes a time domain signal and represents it in the frequency domain. Given a complex signal that is mixed from multiple sinusoidal signals (with different frequencies), the Fourier Transform helps disclose the frequency of each of the sinusoidal signals. One key assumption for Fourier Transform is that any complex signal is actually a linear combination of multiple simple sinusoidal signals, e.g., 
+\section{Fast Fourier Transform}
+The \emph{Fast Fourier Transform} takes a time domain signal and represents it in the frequency domain. Given a target signal that is mixed from multiple sinusoidal signals (with different frequencies), the Fourier Transform helps disclose the frequency of each of the sinusoidal signals. One key assumption for Fourier Transform is that any target signal is actually a linear combination of multiple simple sinusoidal signals, e.g., 
 $$x(t) = a_0 \cdot x_0(t) + a_1 \cdot x_1(t) + \cdots + a_n \cdot x_n(t),$$
-where $x(t)$ is a complex signal, the series $x_i(t)$ are simple sinusoidal signals, and $a_i$ is the coefficient of $x_i(t)$. The Fourier Transform simply reveals the value of each $a_i$.
+where $x(t)$ is the target signal, the series $x_i(t)$ are simple sinusoidal signals, and $a_i$ is the coefficient of $x_i(t)$. The Fourier Transform simply reveals the value of each $a_i$.
 
 \subsection{Sampling}
-For Discrete Fourier Transform, for the time series of a signal, we have to sample it in the time domain to get an array of values. There are two key factors that affects the resulted array: sampling frequency $f_s$ and duration $T_s$ of the signal in sampling. The higher sample frequency, the more samples we can get in 1 second. The longer duration, the more samples we can get in total.
+For the time series of a signal, we sample it in the time domain to get an array of values. There are two key factors that affects the resulted array: sampling frequency $f_s$, and duration $T_s$ of the signal in sampling. The higher sample frequency, the more samples we can get each second. The longer duration, the more samples we can get in total.
 
 For example, given a signal with duration of 5 seconds, we sample it at the rate of 1000 Hz. We should get 1000 samples per second, and totally we should get $5\times 1000 = 5000$ samples.
 
 In experiments, we can specify the sampling rate $f_s$ and the total number of samples $N$ that we plan to get, and then calculate $T_s = \frac{N}{f_s}$ to get the duration of the signal that we need for sampling. It's possible that there exists $i$ such that $x_i(t)$ is a sinusoidal wave with cycle duration $T_s$, and in this case the frequency of $x_i(t)$ is $\frac{1}{T_s} = \frac{f_s}{N}$, which is the lowest frequency that can be characterized by the sampling. All other higher frequencies are integer multiple of $\frac{f_s}{N}.$
 
-To achieve better frequency resolution, we can either decrease $f_s$ or increase $N$. Increasing $N$ means we will take more samples at given sampling frequency $f_s$. Given any $f_s$, the more samples we have, the better frequency resolution can be characterized. However, decreasing $f_s$ is a bit counter intuitive. We should notice that given total samples $N$, a smaller $f_s$ means longer time in signal to get total $N$ samples. Therefore, no matter decreasing $f_s$ or  increasing $N$ , fundamentally both requires the signal lasts for longer time for collecting samples.
+To achieve better frequency resolution, we can either decrease $f_s$ or increase $N$. Increasing $N$ means we will collect more samples at given sampling frequency $f_s$. Given any $f_s$, the more samples we collect, the better frequency resolution can be characterized. However, decreasing $f_s$ is a bit counter intuitive. We should notice that if the total number of samples $N$ is fixed, with a smaller $f_s$ we require a signal with longer duration in order to collect $N$ samples in total. Therefore, no matter decreasing $f_s$ or  increasing $N$, fundamentally both requires the signal lasts for longer duration for collecting samples.
+
+\subsection{Aliasing}
+\subsection{Fourier Coefficients}
 
 
 
