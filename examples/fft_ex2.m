@@ -49,11 +49,9 @@ function m = mix_signals(freqs, sr, len)
     m = [];
 
     for i = 1:length(freqs)
-        s = cosine_signal(freqs(i), sr, len);
-        x = s(1, :);
-        y = s(2, :);
-
-        if length(m) == 0
+        y = cosine_signal(freqs(i), sr, len);
+        
+        if isempty(m)
             m = y;
         else
             m = m + y;
@@ -63,7 +61,7 @@ end
 
 %%
 % cosine_signal: Generate a cosinusoidal signal
-%  * return: two arrays, one is the X ticks, and the other is the Y values.
+%  * return: the Y values at time ticks.
 %  * args:
 %    - freq: frequency of the signal
 %    - sr: sampling rate
@@ -74,7 +72,5 @@ function s = cosine_signal(freq, sr, len)
     N = sr * len;
 
     t = (0:N - 1) * T;
-    v = cos(2 * pi * freq * t);
-
-    s = [t; v];
+    s = cos(2 * pi * freq * t);
 end
