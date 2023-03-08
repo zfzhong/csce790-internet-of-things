@@ -18,7 +18,7 @@ close all; clear; clc;
 
 %%
 % Plot a 14-Hz signal at various samping rate. When the sampling rate is
-% equal to or lower than 24 Hz, the plotted waves don't have the correct 
+% equal to or lower than 28 Hz, the plotted waves don't have the correct 
 % frequency. Please refer to the Nyquist rate/frequency theory for details.
 %
 freq = 14; % 14 Hz
