@@ -43,9 +43,11 @@ function plot_fft(data, sr)
     %%
     % Plot frequency vs. magnitude
     %
-    figure;;
+    figure;
     plot(freq_ticks, mag);
+    ylim([0,1]);
     xlabel('Frequency (Hz)');
     ylabel('Magnitude');
+    legend(sprintf("Sampling Rate: %d", sr));
     set(gca, 'FontSize', 15);
 end
