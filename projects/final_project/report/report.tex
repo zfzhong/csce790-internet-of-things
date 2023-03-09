@@ -28,6 +28,18 @@
 \usepackage{gensymb}
 \usepackage{xspace}
 \usepackage{hyperref}
+\usepackage{fancyvrb}
+
+
+\usepackage{listings}
+\usepackage[most]{tcolorbox}
+\usepackage{inconsolata}
+
+\newtcblisting[auto counter]{sexylisting}[2][]{sharp corners, 
+    fonttitle=\bfseries, colframe=gray, listing only, 
+    listing options={basicstyle=\ttfamily,language=java}, 
+    title=Listing \thetcbcounter: #2, #1}
+
 %\usepackage{ctex}
 
 %SetFonts
@@ -75,8 +87,41 @@ In experiments, we can specify the sampling rate $f_s$ and the total number of s
 
 To achieve better frequency resolution, we can either decrease $f_s$ or increase $N$. Increasing $N$ means we will collect more samples at given sampling frequency $f_s$. Given any $f_s$, the more samples we collect, the better frequency resolution can be characterized. However, decreasing $f_s$ is a bit counter intuitive. We should notice that if the total number of samples $N$ is fixed, with a smaller $f_s$ we require a signal with longer duration in order to collect $N$ samples in total. Therefore, no matter decreasing $f_s$ or  increasing $N$, fundamentally both requires the signal lasts for longer duration for collecting samples.
 
-\subsection{Aliasing}
+\subsection{Nyquists Frequency \& Aliasing}
+According to the \emph{Nyquist Frequency} theory, to recover a signal from samples, they sampling rate should be more than twice the frequency of the target signal. In other words, with a sampling rate $f_s$, we can correctly characterize signals with frequencies less than $\sfrac{f_s}{2}$. For these signals with frequencies equal to or above $\sfrac{f_s}{2}$, FFT will result aliasing: incorrectly characterizing the frequencies to some other values.
+
+The following Matlab code in Figure~\ref{fig:aliasing-code} can be used to calculate the aliased frequency location:
+\begin{figure}[ht]
+\begin{sexylisting}[colback=white]{Calculating aliased frequency location}
+function f = freq_aliasing(freq, sr)
+    nyquist_freq = sr / 2;
+
+    if nyquist_freq > freq
+        f = freq;
+    else
+        r = mod(freq, nyquist_freq);
+        q = (freq - r) / nyquist_freq;
+
+        if r > 0
+            q = q + 1;
+        end
+
+        if mod(q, 2) == 0
+            f = mod(q * nyquist_freq, freq);
+        else
+            f = nyquist_freq - mod(q * nyquist_freq, freq);
+        end
+    end
+end
+\end{sexylisting}
+\caption{Code for calculating aliased frequency locations}
+\label{fig:aliasing-code}
+\end{figure}
+
+
 \subsection{Fourier Coefficients}
+
+The FFT is essentially to find out Fourier Coefficients. The fundamental idea is relatively easy to understand. With $N$ samples, our target signal might be consist of  $N$ different sinusoidal waves, each of which has a unique frequency $f_i (1 \le i \le N)$.
 
 
 
@@ -172,15 +217,15 @@ label("$f_0$", a1, W);
 pair c1 = (0,0), c2 = (3,3), c3 = (3,0), c4 = (4.5,1.5);
 pair d1 = (1,0), d2 = (4,3), d3 =(4,0), d4 = (5.5,1.5);
 
-draw(c1 -- c2 -- c3 -- c4, red);
-draw(d1 -- d2 -- d3 -- d4, blue);
+draw(c1 -- c2 -- c3 -- c4, fuchsia);
+draw(d1 -- d2 -- d3 -- d4, royalblue);
 
 // legend
 pair lb = (c4+d4)/2;
 Label laR = Label("{\small Rx signal}", position=EndPoint);
-draw((lb.x, lb.y+2.65)--(lb.x+1, lb.y+2.65), L=laR, blue);
+draw((lb.x, lb.y+2.65)--(lb.x+1, lb.y+2.65), L=laR, royalblue);
 Label laT = Label("{\small Tx signal}", position=EndPoint);
-draw((lb.x, lb.y+2)--(lb.x+1, lb.y+2), L=laT, red);
+draw((lb.x, lb.y+2)--(lb.x+1, lb.y+2), L=laT, fuchsia);
 
 // chirp duration T
 Label la1 = Label("$T$", align=(0,0), position=MidPoint, filltype=Fill(white));
@@ -220,10 +265,115 @@ $$\Delta t = \frac{\Delta f}{S},$$
 and future deduce the distance from the transmitter to the obstacle 
 $$d = \frac{1}{2}\cdot \Delta t \cdot c = \frac{c}{2S}\cdot \Delta f.$$
 
+It's important to notice that the above equation states clearly the connection between distance and frequency: $\Delta f$ is proportional to $d$.
+
 With the chirp transmitting bandwidth $B$, transmitting time $T$, the minimum frequency that can be captured by the device is 
 $$\Delta f_{min} = \frac{1}{T} = \frac{S}{B}, $$ and the minimum distance from an obstacle the device is able to capture is then 
 $$d_{min} = \frac{c}{2S}\cdot \Delta f_{min} = \frac{c}{2B},$$
-where bandwidth $B$ determines the minimum distance that can be captured by the device.
+where bandwidth $B$ determines the minimum distance that can be captured by the device. 
+
+When design a radar, we must have in mind the maximum distance the radar can reach to detect obstacles. Given that we know $\Delta f$ is proportional to the obstacle's distance $d$, when $d$ is large, we will get a large $\Delta f$,  which in reality should be digitalized by an ADC device with sampling rate $f_s \ge \Delta f$. In fact, the ADC sampling rate is the key factor that limits the capability of the radar. Given a sampling rate $f_{max}$, we have the maximum distance that a radar can reach is 
+$$d_{max} = \frac{c}{2S}\cdot  f_{max}.$$
+
+Essentially, the $f_{max}$ of a TI IWR1443 board is just the bandwidth $B$. The $d_{max}$ is half of the distance that the wave can travel in the duration of the chirp.
+
+\subsection{Phase}
+
+\begin{figure}
+\centering
+\begin{asy}
+unitsize(24pt);
+defaultpen(linewidth(1pt));
+import graph;
+
+arrowbar hookhead = Arrow(HookHead, size=7, angle=20);
+arrowbar hookheads = Arrows(HookHead, size=7, angle=20);
+arrowbar smallarrows = ArcArrows(size=4, angle=35);
+pen thinline = linewidth(0.6pt);
+
+real freq = 0.1, slope=0.2, theta = -pi/2, t1=1.5, height=3.5;
+int len = 8;
+
+pair o = (0,0), x1=(11,0), y1 = (0,2);
+path crd1 = x1 -- o -- y1;
+draw(crd1, hookheads);
+
+path crd2 = shift((0,-height))*crd1;
+draw(crd2, hookheads);
+
+path crd3 = shift(0,-2*height)*crd1;
+draw(crd3, hookheads);
+
+
+
+real fmcw(real x) {
+    return cos(2*pi*freq*x + pi*slope*x*x + theta);
+}
+
+typedef real realfunc(real);
+
+realfunc ifwave(real delta) {
+    real func(real x) {
+        return cos(2*pi*(slope*delta)*x+2*pi*freq*delta);
+    }
+    
+    return func;
+}
+
+real lstart=8, llen=0.8;
+
+path w1 = graph(fmcw, 0, len, 400);
+draw(w1, fuchsia);
+
+Label laT = Label("{\small Tx signal}", position=EndPoint);
+draw((lstart, 1.5)--(lstart+llen, 1.5), L=laT, fuchsia);
+
+path w2 = shift((t1,-height))*w1;
+draw(w2, royalblue);
+Label laR = Label("{\small Rx signal}", position=EndPoint);
+draw((lstart,-height+1.5)--(lstart+llen, -height+1.5), L=laR, royalblue);
+
+path w3 = shift((t1, -2*height))*graph(ifwave(t1), 0, len, 400);
+draw(w3, orange);
+Label laF = Label("{\small IF signal}", position=EndPoint);
+draw((lstart, -2*height+1.5)--(lstart+llen, -2*height+1.5), L=laF, orange);
+
+draw((t1,-2*height)--(t1,1.5), dotted);
+
+pair ph0 = (0,0);
+dot(ph0);
+pair ph1 = (t1, fmcw(t1));
+dot(ph1);
+pair ph3 = (t1, -height);
+dot(ph3);
+pair ph4 = (t1, ifwave(t1)(0)-2*height);
+dot(ph4);
+
+label("$t_1$", (t1, -2*height), S);
+label("$t_0$", (0, -2*height), S);
+
+label("\small $\phi(t_0)$", ph0, NW);
+label("\small $\phi(t_1)$", ph1, NE);
+label("\small $\phi(t_0)$", ph3, NW);
+label("\small $\phi(t_1) -\phi(t_0)$", ph4, NE);
+
+\end{asy}
+\caption{Phase analysis of an IF signal}
+\label{fig:phase}
+\end{figure}
+
+Given
+$$x(t) = \cos(2\pi f_0 t+ \pi \cdot S\cdot t^2), \qquad \text{and}\qquad t_2 = t_1 + \Delta t,$$
+we have
+\begin{align*}
+\phi(t_2) - \phi(t_1) &= (2\pi f_0 t_2 + \pi\cdot S\cdot t_2^2) - (2\pi f_0 t_1 + \pi\cdot S\cdot t_1^2) \\
+& = \left[2\pi f_0 (t_1+\Delta t) + \pi\cdot S\cdot (t_1 + \Delta t)^2\right] - (2\pi f_0 t_1 + \pi\cdot S\cdot t_1^2) \\
+& = 2\pi f_0 \Delta t + 2\pi\cdot S\cdot t_1 \cdot \Delta t + \pi \cdot S\cdot \Delta t^2\\
+& = 2\pi f_0 \Delta t + 2\pi \Delta f \cdot t_1 + \pi \cdot \Delta f \cdot \Delta t \\
+& \approx 2\pi f_0 \Delta t
+\end{align*}
+
+For the above equation, the first term dominates since in reality $f_0$ is at $\sim$ 10GHz level while the other two terms are $\sim \frac{1}{100}$ of the first term. 
 
 \subsection{other notes}
 
