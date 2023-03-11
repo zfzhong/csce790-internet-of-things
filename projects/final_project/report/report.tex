@@ -190,6 +190,8 @@ $S$ & frequency increase pace (slope) & 29.982 MHz/us in our experiment\\
 \hline
 $B$ & bandwidth of a chirp, $B=T\cdot S$ & $29.982 \times 60 = 1.79892$ GHz \\
 \hline
+$\phi(t)$ & phase of signal at time $t$ & $\phi_x(t), \phi_r(t), \phi_i(t)$: Tx, Rx, IF\\
+\hline
 \end{tabular}
 \end{table}
 
@@ -290,8 +292,10 @@ arrowbar hookhead = Arrow(HookHead, size=7, angle=20);
 arrowbar hookheads = Arrows(HookHead, size=7, angle=20);
 arrowbar smallarrows = ArcArrows(size=4, angle=35);
 pen thinline = linewidth(0.6pt);
+pen dashed=linetype(new real[] {4,4});
 
-real freq = 0.1, slope=0.2, theta = -pi/2, t1=1.5, height=3.5;
+
+real freq = 0.1, slope=0.2, theta = -pi/2, t1=1.3, t2=2.2, height=3.5;
 int len = 8;
 
 pair o = (0,0), x1=(11,0), y1 = (0,2);
@@ -305,6 +309,9 @@ path crd3 = shift(0,-2*height)*crd1;
 draw(crd3, hookheads);
 
 
+void smalldot(pair a) {
+    dot(a, linewidth(5pt));
+}
 
 real fmcw(real x) {
     return cos(2*pi*freq*x + pi*slope*x*x + theta);
@@ -330,33 +337,47 @@ draw((lstart, 1.5)--(lstart+llen, 1.5), L=laT, fuchsia);
 
 path w2 = shift((t1,-height))*w1;
 draw(w2, royalblue);
+path w21 = shift((t2-t1,0))*w2;
+draw(w21, royalblue+dashed);
 Label laR = Label("{\small Rx signal}", position=EndPoint);
 draw((lstart,-height+1.5)--(lstart+llen, -height+1.5), L=laR, royalblue);
 
 path w3 = shift((t1, -2*height))*graph(ifwave(t1), 0, len, 400);
 draw(w3, orange);
+path w31 = shift((t2, -2*height))*graph(ifwave(t2), 0, len, 400);
+draw(w31, orange+dashed);
 Label laF = Label("{\small IF signal}", position=EndPoint);
 draw((lstart, -2*height+1.5)--(lstart+llen, -2*height+1.5), L=laF, orange);
 
-draw((t1,-2*height)--(t1,1.5), dotted);
+draw((t1,-2*height-0.05)--(t1,1.5), dotted);
+draw((t2,-2*height-0.05)--(t2,1.5), dotted);
 
 pair ph0 = (0,0);
-dot(ph0);
+smalldot(ph0);
 pair ph1 = (t1, fmcw(t1));
-dot(ph1);
+smalldot(ph1);
+pair ph2 = (t2, fmcw(t2));
+smalldot(ph2);
 pair ph3 = (t1, -height);
-dot(ph3);
-pair ph4 = (t1, ifwave(t1)(0)-2*height);
-dot(ph4);
+smalldot(ph3);
+pair ph4 = (t2, -height);
+smalldot(ph4);
+pair ph5 = (t1, ifwave(t1)(0)-2*height);
+smalldot(ph5);
+pair ph6 = (t2, ifwave(t2)(0)-2*height);
+smalldot(ph6);
 
-label("$t_1$", (t1, -2*height), S);
 label("$t_0$", (0, -2*height), S);
+label("$t_1$", (t1, -2*height), S);
+label("$t_2$", (t2, -2*height), S);
 
-label("\small $\phi(t_0)$", ph0, NW);
-label("\small $\phi(t_1)$", ph1, NE);
-label("\small $\phi(t_0)$", ph3, NW);
-label("\small $\phi(t_1) -\phi(t_0)$", ph4, NE);
-
+label("\small $\phi_x(t_0)$", ph0, NW);
+label("\small $\phi_x(t_1)$", ph1, NW);
+label("\small $\phi_r(t_1)$", ph3, NW);
+label("\small $\phi_i(t_1)$", ph5, NW);
+label("\small $\phi_x(t_2)$", ph2, SE);
+label("\small $\phi_r(t_2)$", ph4, SE);
+label("\small $\phi_i(t_2)$", ph6, NE);
 \end{asy}
 \caption{Phase analysis of an IF signal}
 \label{fig:phase}
@@ -366,14 +387,20 @@ Given
 $$x(t) = \cos(2\pi f_0 t+ \pi \cdot S\cdot t^2), \qquad \text{and}\qquad t_2 = t_1 + \Delta t,$$
 we have
 \begin{align*}
-\phi(t_2) - \phi(t_1) &= (2\pi f_0 t_2 + \pi\cdot S\cdot t_2^2) - (2\pi f_0 t_1 + \pi\cdot S\cdot t_1^2) \\
+\phi_x(t_2) - \phi_x(t_1) &= (2\pi f_0 t_2 + \pi\cdot S\cdot t_2^2) - (2\pi f_0 t_1 + \pi\cdot S\cdot t_1^2) \\
 & = \left[2\pi f_0 (t_1+\Delta t) + \pi\cdot S\cdot (t_1 + \Delta t)^2\right] - (2\pi f_0 t_1 + \pi\cdot S\cdot t_1^2) \\
 & = 2\pi f_0 \Delta t + 2\pi\cdot S\cdot t_1 \cdot \Delta t + \pi \cdot S\cdot \Delta t^2\\
 & = 2\pi f_0 \Delta t + 2\pi \Delta f \cdot t_1 + \pi \cdot \Delta f \cdot \Delta t \\
-& \approx 2\pi f_0 \Delta t
+& \approx 2\pi f_0 \Delta t \qquad (\text{when } \Delta f <\frac{S}{B})
 \end{align*}
 
-For the above equation, the first term dominates since in reality $f_0$ is at $\sim$ 10GHz level while the other two terms are $\sim \frac{1}{100}$ of the first term. 
+For the above equation, the first term dominates since in reality $f_0$ is at $\sim$ 10GHz level while the other two terms are $\sim \frac{1}{100}$ of the first term. Most importantly, phase analysis is used when the range could not be differentiated (when $\Delta f < \frac{S}{B}$). When two obstacles are too close to be differentiated by their frequencies, we do phase analysis to deduce their distance (based on  phase shifting). In applications such as vibration detection, the vibrations are tiny scale changes and they don't cause discernible differences in frequency, but they usually trigger observable changes in phases. In general, we should know that phase is much more sensitive to small changes.
+
+Figure~\ref{fig:phase} illustrates the scenario where the Rx signal gets delayed because of tiny movement of the obstacle (moving away from the radar). Instead of coming back at $t_1$, the Rx signal arrives at $t_2$ (with delay $\Delta t = t_2 - t_1$).  Since
+$$\phi_i(t_1) = \phi_x(t1) - \phi_r(t_1), \qquad \phi_i(t_2) = \phi_x(t2) - \phi_r(t_2), \qquad \phi_r(t_2) = \phi_r(t1) = \phi_x(t_0),$$
+the phase shifting for the IF signal is
+$$\phi_i(t_2)-\phi_i(t_1) = \phi_x(t_2) - \phi_x(t_1) \approx 2\pi f_0 \Delta t.$$
+
 
 \subsection{other notes}
 
