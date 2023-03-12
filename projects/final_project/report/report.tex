@@ -277,14 +277,14 @@ where bandwidth $B$ determines the minimum distance that can be captured by the 
 When design a radar, we must have in mind the maximum distance the radar can reach to detect obstacles. Given that we know $\Delta f$ is proportional to the obstacle's distance $d$, when $d$ is large, we will get a large $\Delta f$,  which in reality should be digitalized by an ADC device with sampling rate $f_s \ge \Delta f$. In fact, the ADC sampling rate is the key factor that limits the capability of the radar. Given a sampling rate $f_{max}$, we have the maximum distance that a radar can reach is 
 $$d_{max} = \frac{c}{2S}\cdot  f_{max}.$$
 
-Essentially, the $f_{max}$ of a TI IWR1443 board is just the bandwidth $B$. The $d_{max}$ is half of the distance that the wave can travel in the duration of the chirp.
+Essentially, the $f_{max}$ of a TI IWR1443 board is just the bandwidth $B$. The $d_{max}$, in theory, is half of the distance that the wave can travel in the duration of the chirp. If the chirp duration is 60 us, then $d_{max} = 3\times 10^8 \times 60 \times 10^{-6} = 1.8\times 10^4$ meters. However, in practice our sampling rate can not reach $1.8$ GHz. With a sampling rate $1\times 10^7$ Hz, the maximum distance is $3\times 10^8 \cdot \frac{10^7}{2\times 30\times 10^6\times 10^6} = 50$ meters (slope $B$ is 30 MHz/us, which is $30\times 10^6 \times 10^6$ Hz/s).
 
 \subsection{Phase}
 
 \begin{figure}
 \centering
 \begin{asy}
-unitsize(24pt);
+unitsize(25pt);
 defaultpen(linewidth(1pt));
 import graph;
 
