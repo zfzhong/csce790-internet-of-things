@@ -83,7 +83,7 @@ For the time series of a signal, we sample it in the time domain to get an array
 
 For example, given a signal with duration of 5 seconds, we sample it at the rate of 1000 Hz. We should get 1000 samples per second, and totally we should get $5\times 1000 = 5000$ samples.
 
-In experiments, we can specify the sampling rate $f_s$ and the total number of samples $N$ that we plan to get, and then calculate $T_s = \frac{N}{f_s}$ to get the duration of the signal that we need for sampling. It's possible that there exists $i$ such that $x_i(t)$ is a sinusoidal wave with cycle duration $T_s$, and in this case the frequency of $x_i(t)$ is $\frac{1}{T_s} = \frac{f_s}{N}$, which is the lowest frequency that can be characterized by the sampling. All other higher frequencies are integer multiple of $\frac{f_s}{N}.$
+In experiments, we can specify the sampling rate $f_s$ and the total number of samples $N$ that we plan to get, and then calculate $T_s = \frac{N}{f_s}$ to get the duration of the signal that we need for sampling. It's possible that there exists $i$ such that $x_i(t)$ is a sinusoidal wave with cycle duration $T_s$, and in this case the frequency of $x_i(t)$ is $\frac{1}{T_s} = \frac{f_s}{N}$, which is the lowest frequency that can be characterized by the sampling. All other higher frequencies are integer multiples of $\frac{f_s}{N}.$
 
 To achieve better frequency resolution, we can either decrease $f_s$ or increase $N$. Increasing $N$ means we will collect more samples at given sampling frequency $f_s$. Given any $f_s$, the more samples we collect, the better frequency resolution can be characterized. However, decreasing $f_s$ is a bit counter intuitive. We should notice that if the total number of samples $N$ is fixed, with a smaller $f_s$ we require a signal with longer duration in order to collect $N$ samples in total. Therefore, no matter decreasing $f_s$ or  increasing $N$, fundamentally both requires the signal lasts for longer duration for collecting samples.
 
@@ -134,11 +134,12 @@ For chirp transmission, each chirp lasts for 66 us, followed by a 100 us idle pe
 
 However, the ramp-type analog-to-digital converter (also known as ramp-compare or time-base ADC) starts 6 us after the beginning of each chirp, and the useful transmission is hence $66 - 6 = 60$ us. With a frequency slope ($S$) 29.982 MHz/us, the bandwidth (maximum frequency difference) is $29.982 \times 60 = 1798.92$ MHz (the maximum bandwidth supported by the TI IWR1443BOOST board is 3959.88 MHz).
 
-With a sampling window of 60 us, the minimum frequency difference ($\Delta f$) that can be captured is $\frac{10^6}{60} \approx 1.7\times 10^4$ Hz, which corresponds to time difference $\Delta t = \frac{\Delta f}{S} = \frac{10^6}{60\times 29.982 \times 10^6} \approx 5.6\times 10^{-4}$ us, and this corresponds a distance $\Delta d = \frac{1}{2}\cdot c\cdot \Delta t = 3\times 10^8 \times 5.6\times 10^{-4}\times 10^{-6} = 8.4\times 10^{-2}$ meters (8.4 cm). It's easy to see that the best range resolution that a device with 4G Hz bandwidth can achieve is about 4 cm.
+With a sampling window of 60 us, the minimum frequency difference ($\Delta f$) that can be captured is $\frac{10^6}{60} \approx 1.7\times 10^4$ Hz, which corresponds to time difference $\Delta t = \frac{\Delta f}{S} = \frac{10^6}{60\times 29.982 \times 10^6} \approx 5.6\times 10^{-4}$ us, and this corresponds to a distance $\Delta d = \frac{1}{2}\cdot c\cdot \Delta t = 3\times 10^8 \times 5.6\times 10^{-4}\times 10^{-6} = 8.4\times 10^{-2}$ meters (8.4 cm). It's easy to see that the best range resolution that a device with 4G Hz bandwidth can achieve is about 4 cm. This means that if two obstacles are too close to each other and their IF signals might have frequencies with difference less than $\Delta f$, and the FFT won't be able to differentiate the two IF signals in frequency domain.
 
-With FMCW, the reflection chirp will be mixed with the transmitting chirp to form an intermediate frequency (IF), which has a frequency that is the difference of the frequency of the transmitting chirp and the frequency of the reflection chirp. The IF frequency ($\Delta f$) can be easily observed during an experiment, and thus we can calculate the distance of the obstacle that causes the reflection: 
+With FMCW, a reflection chirp will be mixed with the transmitting chirp to form an intermediate frequency (IF), which has a frequency that is the difference of the frequency of the transmitting chirp and the frequency of the reflection chirp. The IF frequency ($\Delta f$) can be easily observed during an experiment, and thus we can calculate the distance of the obstacle that causes the reflection: 
 $$\Delta f = S\cdot \Delta t = S\cdot \frac{2d}{c} \qquad \Rightarrow \qquad d = \frac{c}{2S}\cdot \Delta f.$$
 
+\subsection{The Transmitting Signal}
 Let's review briefly how the IF signal gets generated. On the mmWave device, there is a `mixer'  component that takes the reflected signal and the transmitting signal as inputs, and generates a mixed signal that is the \emph{multiplication} of the two input signals. Given two input signals 
 $$x_1 = \cos(\omega_1 t + \phi_1) \qquad \text{and}\qquad x_2 = \cos(\omega_2 t + \phi_2),$$
 the multiplied signal should be 
@@ -270,10 +271,11 @@ $$d = \frac{1}{2}\cdot \Delta t \cdot c = \frac{c}{2S}\cdot \Delta f.$$
 It's important to notice that the above equation states clearly the connection between distance and frequency: $\Delta f$ is proportional to $d$.
 
 With the chirp transmitting bandwidth $B$, transmitting time $T$, the minimum frequency that can be captured by the device is 
-$$\Delta f_{min} = \frac{1}{T} = \frac{S}{B}, $$ and the minimum distance from an obstacle the device is able to capture is then 
+$$\Delta f_{min} = \frac{1}{T} = \frac{S}{B}, $$ and the minimum distance (range resolution) between two obstacles that could be captured by the radar is then 
 $$d_{min} = \frac{c}{2S}\cdot \Delta f_{min} = \frac{c}{2B},$$
-where bandwidth $B$ determines the minimum distance that can be captured by the device. 
+where bandwidth $B$ is the key factor that determines the range resolution.
 
+\subsection{Maximum Range of a Radar}
 When design a radar, we must have in mind the maximum distance the radar can reach to detect obstacles. Given that we know $\Delta f$ is proportional to the obstacle's distance $d$, when $d$ is large, we will get a large $\Delta f$,  which in reality should be digitalized by an ADC device with sampling rate $f_s \ge \Delta f$. In fact, the ADC sampling rate is the key factor that limits the capability of the radar. Given a sampling rate $f_{max}$, we have the maximum distance that a radar can reach is 
 $$d_{max} = \frac{c}{2S}\cdot  f_{max}.$$
 
