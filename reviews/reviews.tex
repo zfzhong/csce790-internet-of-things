@@ -259,5 +259,77 @@ Tracking 3D finger motions at the joint level with ultrasound and mmWave.\\
 \emph{Any other comments, suggestions, or questions}.
 
 
+\newpage
+\section{Paper review, due 03/14/2023}
+\begin{center}
+\noindent
+\textbf{\Large Paper title: ``Whole-Home Gesture Recognition Using Wireless Signals''}
+\end{center}
+
+
+\noindent \textbf{Student's name and ID: }\\
+Zifei (David) Zhong, B70365610\\
+
+\noindent \textbf{Summary:}\\
+\emph{Briefly summarize the main ideas and the approach}.
+
+This paper presents a system based on wireless signals to recognize human whole-body gestures in whole-home settings. The system involves a design that can identify Doppler shifts a the resolution of a few Hertz fro Wi-Fi signals. With this design, it can characterize the features of several different whole-body gestures. The system also has a mechanism to track a particular target person in an environment with multiple people presented. A proof-of-concept prototype of the system is implemented using USRP-N210s device. Evaluation from an office environment and a two-bedroom apartment indicated that the system has high accuracy over (90\%) in recognizing a set of 9 human gestures.\\
+
+\noindent \textbf{Contributions:}\\
+\emph{What are the major issues addressed in the paper?}
+
+The major issued addressed in this paper is recognizing human body gestures in a whole-home setting with wireless signal made possible, without requiring extra devices mounted on the human body.\\
+
+
+\noindent \emph{Do you consider them important?}
+
+Yes, I consider it important. It's the first whole-home gesture recognition work that requires neither user instrumentation nor cameras.\\
+
+
+\noindent \emph{Comment on the novelty, creativity, and technical depth of the paper.}
+
+This paper presents a novel method to transform the received signals into narrowband pulse with the bandwidth of a few Hertz and then tracks the frequency of this narrowband pulse to detect the small Doppler shifts to recognize different gestures. The details of the method is provided in section 3 and that is a great piece of learning materials for other researchers. 
+
+This paper also provide details on how it solves many practical issues in order to make the idea work successfully. With a set of 9 gestures which are carefully designed,  it provides a series of experiments to demonstrate the effectiveness of its design and implementation. This paper has shown great technical depth.\\
+
+
+\noindent \textbf{Strengths and Weaknesses:}\\
+\emph{What are the paper’s strengths? Be brief.}
+
+The strength of this paper is that it has demonstrated successfully how to recognize human gestures via wireless signals without requiring on-body devices or cameras. It has designed a novel method to extract Doppler shifts from wireless signals and thus effectively characterizes different gestures. The design is implemented into a prototype and evaluated with a series of experiments with success.\\
+
+
+
+\noindent \emph{What are the paper's weaknesses? Be brief.}
+
+The weakness is that it only recognizes a given set of 9 gestures, which is quite a limited set of gestures. Even though it does not require on-body devices, it still requires multiple antennas in a whole-home setting. The accuracy is about 60\% (expected to be higher) when 4 receiver antennas and a single transmitter are presented.\\
+
+
+\noindent \textbf{Evaluation:}\\
+\emph{Comment on the paper's evaluation methodology.}
+
+A prototype is built on the software radio platform and evaluated on the USRP-N210 hardware. The evaluation is done in two settings: an office building and a two-bedroom apartment. There are 5 users involved in  6 different experimental scenarios. 
+
+The feasibility of gesture recognition using wireless signals in the 6 scenarios are firstly evaluated. The results indicates that using 3-4 antennas at the receiver is sufficient to achieve gesture detection in all scenarios. The gesture recognition is evaluated in the two-bedroom setting. Gesture recognition in presence of other humans is also evaluated. \\
+
+\noindent \emph{Comment on the results.}
+
+In gesture recognition in a two-bedroom setting, an average accuracy of 94\% is achieved with a stand deviation of 4.6\%. In kitchen or other locations where reflected signals are weak, gestures might not be detected. This non-detected gestures account for 2\% of all gestures in the experiments.
+
+The paper also provides evaluation that indicates simply increasing the number of repetitions to 2 in the preamble will mostly decrease the false detection rate below 5\%.  More antennas will make the system more robust to interference, too.\\
+
+
+\noindent \textbf{Future works:}\\
+\emph{Are there any issues or directions left open?}
+
+Certainly, this paper was published in 2013 and till now fine-grained body gesture recognition is a hot research topic and many work has been done regarding it.\\
+
+\noindent \emph{List a few possible extensions of this work.}
+
+Fine-grained body gesture recognition and reconstruction with mmWave technology.\\
+
+
+\noindent \textbf{Other comments or questions:}\\
+\emph{Any other comments, suggestions, or questions}.
 
 \end{document} 
