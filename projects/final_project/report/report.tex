@@ -403,6 +403,41 @@ $$\phi_i(t_1) = \phi_x(t1) - \phi_r(t_1), \qquad \phi_i(t_2) = \phi_x(t2) - \phi
 the phase shifting for the IF signal is
 $$\phi_i(t_2)-\phi_i(t_1) = \phi_x(t_2) - \phi_x(t_1) \approx 2\pi f_0 \Delta t.$$
 
+\section{Range-FFT}
+\section{Doppler-FFT}
+The \emph{Doppler Effect} states that an observer should perceive the change in frequency for a source signal from a moving object. When the object is moving toward the observer, the perceived signal frequency should be higher; when the object is moving away from the observer, the perceived signal frequency should be lower. The following formula captures the relationship of the observed signal frequency and the source signal frequency:
+
+
+$$f_o = f_s \cdot \left(\frac{v - v_o}{v - v_s}\right), $$
+where $f_o$ is the perceived signal frequency, $f_s$ is the frequency of the source signal, $v$ is the traveling speed of the signal wave, $v_o$ is the velocity of the observer, and $v_s$ is the velocity of the source (moving object). Notice that here we consider the velocity of the signal as positive, and this indicates that $v_o$ or $v_s$ should be negative if their moving directions are contrary to the traveling direction from the signal source to the observer.
+
+For example, in a simple scenario where a fire truck emits an 880Hz siren. As the truck approaches an observer on the sidewalk, he perceives the pitch to be 950Hz. Approximately what frequency does he hear after the truck passes and is moving away? Assume the truck's velocity remains constant, and that the velocity of sound in air is 340m/s.
+
+For the above problem, assume the observer on the sidewalk stands still and his velocity $v_o = 0$. The velocity of sound $v = 340$ m/s. The signal source (e.g., the truck) has velocity $v_s$, which is unknown. The source signal frequency $f_s = 880$ Hz, and the perceived signal frequency $f_o = 950$ Hz. According to the formula, we have
+
+$$950 = 880\cdot \frac{340}{340 - v_s}, \qquad \Rightarrow \qquad v_s = 340 - 880\cdot \frac{340}{950} \approx 25.$$
+
+When the truck passes the observer, it starts to move away from the observer. The signal's propagation direction then changes to the opposite direction, and truck's direction remains the same, therefore $v_s = -25$. The perceived frequency becomes 
+
+$$f_o = fs\cdot \frac{v}{v - v_s} = \frac{340}{340+25} \approx 820.$$
+
+\subsection{Doppler Effect with Reflected Signals}
+Because of the round-trip reflection, the perceived signal frequency is 
+ $$f_o = f_s \cdot \left(\frac{v - v_o}{v - v_s}\right)\cdot \left(\frac{-v - v_s}{-v - v_0}\right) = f_s\cdot  \left(\frac{v - v_o}{v - v_s}\right)\cdot \left(\frac{v + v_s}{v + v_0}\right) = f_s\cdot \left(\frac{1 - \frac{v_o}{v}}{1 - \frac{v_s}{v}}\right)\cdot \left(\frac{1 + \frac{v_s}{v}}{1 + \frac{v_0}{v}}\right). $$
+
+When $v$ is the speed of light, $v >> v_s$ and $v >> v_o$, and $\frac{1}{1-\frac{v_s}{v}} \approx (1+\frac{v_s}{v})$, $\frac{1}{1+\frac{v_s}{v}} \approx (1-\frac{v_s}{v})$, and we have
+
+\begin{align*}
+f_o &= f_s \cdot (1-\frac{v_0}{v})(1 + \frac{v_s}{v})\cdot (1+\frac{v_s}{v})(1 - \frac{v_0}{v}) \\
+& = f_s \cdot \left[(1-\frac{v_0}{v})(1 + \frac{v_s}{v})\right]^2\\
+& = f_s \cdot \left(1 + \frac{v_s - v_o}{v} - \frac{v_s \cdot v_o}{v^2}\right)^2\\
+& \approx f_s \cdot (1+\frac{\Delta v}{v})^2 \qquad (\Delta v = v_s - v_o)\\
+& \approx f_s \cdot \left( 1 + \frac{2\cdot \Delta v}{v}\right)
+\end{align*}
+
+Therefore, $$\Delta f = f_o - f_s \approx \frac{2\cdot \Delta v}{v}.$$
+
+\section{Angle-FFT}
 
 \subsection{other notes}
 
