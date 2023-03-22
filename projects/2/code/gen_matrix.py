@@ -320,11 +320,14 @@ if __name__ == '__main__':
     
     if len(sys.argv) >= 4:
         factor = float(sys.argv[3])
-    
+
 
     if action.upper() == 'E':
         # generate emission matrix
         emission = get_emission_stats(filename)
+        #freq = get_states_frequency(emission)    
+        #print(freq)
+
         em = gen_emission_matrix(emission, factor=factor)
         for i in range(0, NUM_STATES):
             items = []
