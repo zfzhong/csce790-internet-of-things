@@ -14,3 +14,8 @@ The model correctly predicts 48.5% of the states.
 
 3. run compare_result.py to compare the predicted result and the original result
    "python3 compare_result.py <test_file> <predict_file>"
+
+4. there are several small test data file for testing purposes:
+    test1.dat test2.dat test3.dat
+
+    they are generated purely for verifying the correctness of the algorithm implementation.
