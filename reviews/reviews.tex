@@ -332,4 +332,78 @@ Fine-grained body gesture recognition and reconstruction with mmWave technology.
 \noindent \textbf{Other comments or questions:}\\
 \emph{Any other comments, suggestions, or questions}.
 
+
+
+\newpage
+\section{Paper review, due 03/23/2023}
+\begin{center}
+\noindent
+\textbf{\Large Paper title: ``A Hidden Markov Model for Seismocardiography''}
+\end{center}
+
+
+\noindent \textbf{Student's name and ID: }\\
+Zifei (David) Zhong, B70365610\\
+
+\noindent \textbf{Summary:}\\
+\emph{Briefly summarize the main ideas and the approach}.
+
+This paper proposes a hidden markov model approach to process seismocardiograms. It uses Baum-Welch algorithm to estimate the parameters, which later is used by Viterbi algorithm to identify the sequence of states of the heart. Experiments from two datasets show that the proposed HMM-based approach outperform existing seismocariography methods substantially. The authors believe that the proposed approach can be extended to apply to many other applications.\\
+
+\noindent \textbf{Contributions:}\\
+\emph{What are the major issues addressed in the paper?}
+
+The major issued address in this paper is to invent better means for processing seismocardiograms with good accuracy. \\
+
+
+\noindent \emph{Do you consider them important?}
+
+Yes, I considered it important. As mentioned in this paper, measuring heart rate is important for health reasons. Since electrocardiogram (ECG) is not available to daily life, seismocardiography becomes important given the widespread of IMU-equipped smart devices (smartphone, smartwatch, etc). Unfortunately, existing approaches had not reached great accuracy on heart rate estimation. Seems the approach in this paper improved the accuracy significantly for seismocardiograms. \\
+
+
+\noindent \emph{Comment on the novelty, creativity, and technical depth of the paper.}
+
+The proposed method is very practical and creative. At first glance, it is not clear how HMM can be employed to estimate heart rate variability. This paper proposed a method that divides the cardiac vibration into a set of sequential hidden states and then estimate the instantaneous heart rate, HRV, and cardiac time intervals, using information form the full waveform of cardiac vibrations.  It's just wonderful if it works.
+
+The authors shared the detailed algorithm of their approach. The evaluation from two datasets on several metrics look solid.\\
+
+
+
+\noindent \textbf{Strengths and Weaknesses:}\\
+\emph{What are the paper’s strengths? Be brief.}
+
+This paper propose to apply HMM model to solve a practical problem. The approach looks nice and clean. Experiments show that the proposed method gain substantially over existing methods for seismocardiograms. Simple approach with great gain.  The way it models the states of a given sample is quite novel.\\
+
+
+
+\noindent \emph{What are the paper's weaknesses? Be brief.}
+
+I expect to see how the HMM based method performs when compared to an ECG. It's not surprising if the HMM based method is still less accurate than an ECG. But at least such comparison will give readers an ideas how good the proposed approach is. Unfortunately, the paper didn't provide that comparision.
+
+This paper puts many data in tables. I would prefer using charts instead of tables given there are many data value involved. It's just difficult to read through these values between table rows.\\
+
+
+\noindent \textbf{Evaluation:}\\
+\emph{Comment on the paper's evaluation methodology.}
+
+The paper evaluate its proposed method with two datasets. It disclosed how the design parameters are selected. Experiments are carried to estimate three metrics: heart rate, heart rate variability, and cardiac time interval. For the first two metric, the comparisons are done among HMM, envelop-based method, and spectral-based method. For the third metric, HMM is compared to previously published results. I considered the evaluation fair.\\
+
+\noindent \emph{Comment on the results.}
+
+The results show that the proposed HMM-based method outperforms other method substantially. On one hand, it's quite convincing that the HMM-based method performs better. On the other hand, I am not aware of any other state-of-the-art methods that achieves great accuracy for seismocardiography. I will leave it to other experts to give better judgement over this.\\
+
+
+\noindent \textbf{Future works:}\\
+\emph{Are there any issues or directions left open?}
+
+As mentioned in this paper, this approach can be applied to many other applications. For example, to estimate the walking pace of human instantaneously. Any application that involves regular vibration can probably employ this approach to get instantaneous estimation.\\
+
+\noindent \emph{List a few possible extensions of this work.}
+
+Try to refine this approach to achieve better accuracy, and compare it with ECG. I already sent an email to the author asking for their data and code. I will first duplicate their work and try to see what more we can do.\\
+
+
+\noindent \textbf{Other comments or questions:}\\
+\emph{Any other comments, suggestions, or questions}.
+
 \end{document} 
