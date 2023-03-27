@@ -97,6 +97,20 @@ class ColorGrid:
         self.num_rows = 0
         self.num_cols = 0
         self.mat = None
+        
+
+    @property
+    def num_elements(self):
+        if not self.mat:
+            return 0
+
+        return self.mat.num_elements
+
+    def get_node(self, i):
+        if self.mat:
+            return self.mat.get_element(i)
+        
+        return None
 
     def init_from_file(self, filename):
         with open (filename, 'r') as f:
