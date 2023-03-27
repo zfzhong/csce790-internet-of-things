@@ -338,6 +338,8 @@ if __name__ == '__main__':
 
     if action.upper() == 'T':
         trans = get_transition_stats(filename)
+        #freq = get_transition_frequency(trans)
+        #print(freq)
         tm = gen_transition_matrix(trans, factor=factor)
         for i in range(0, NUM_STATES):
             items = []
