@@ -80,7 +80,7 @@ class GridNode:
             if nb:
                 dl.append(str(nb))
             else:
-                dl.append('(--,--)')
+                dl.append('---,---')
         
         print('%s: %s' % (self, ', '.join(dl)))
 
