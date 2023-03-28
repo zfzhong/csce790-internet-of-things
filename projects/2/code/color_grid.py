@@ -50,28 +50,23 @@ class GridNode:
         self.grid = grid
         self.id = id
         self.color = color
-
-        self.left_node = None
-        self.up_node = None
-        self.right_node = None
-        self.down_node = None
+        self.num_neighbors = 0
+        self.neighbors = {"L":None, "U":None, "R": None, "D": None}
 
     def is_empty(self):
         return self.color == EMPTY_COLOR
+
+    def set_neighbor(self, node, direction):
+        self.neighbors[direction] = node
+        if not node.is_empty():
+            self.num_neighbors += 1
 
     def neighbor(self, direction):
         direction = direction.upper()
         if not direction in DIRECTIONS:
             raise Exception("direction % wrong" % direction)
 
-        if direction == 'L':
-            return self.left_node
-        if direction == 'U':
-            return self.up_node
-        if direction == 'R':
-            return self.right_node
-        if direction == 'D':
-            return self.down_node    
+        return self.neighbors[direction]
     
     def dump_neighbors(self):
         dl = []
@@ -134,14 +129,13 @@ class ColorGrid:
                     # build left-right neighbors 
                     if i % self.num_cols > 0:
                         lnode = self.mat.get_element(i-1)
-                        lnode.right_node = n
-                        n.left_node = lnode
-                    
+                        lnode.set_neighbor(n, 'R')
+                        n.set_neighbor(lnode, 'L')                    
                     # build top-down neighbors
                     if i // self.num_cols > 0:
                         dnode = self.mat.get_element(i-self.num_cols)
-                        dnode.up_node = n
-                        n.down_node = dnode                    
+                        dnode.set_neighbor(n, 'U')
+                        n.set_neighbor(dnode, 'D')
 
                     self.mat.add_element(n)
                     i += 1
