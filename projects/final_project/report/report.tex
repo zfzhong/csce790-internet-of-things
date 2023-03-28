@@ -29,6 +29,7 @@
 \usepackage{xspace}
 \usepackage{hyperref}
 \usepackage{fancyvrb}
+\usepackage{fontawesome}
 
 
 \usepackage{listings}
@@ -47,6 +48,46 @@
 %SetFonts
 
 \usepackage[inline]{asymptote}
+
+
+\usepackage[framemethod=tikz]{mdframed}
+
+\newtheorem{example}{Example}
+\mdfdefinestyle{examp}{
+  linecolor=cyan,
+  backgroundcolor=yellow!20
+  % , rotatebox
+}
+\surroundwithmdframed[style=examp]{example}
+
+\usepackage{environ}
+\NewEnviron{Example}
+{%
+\noindent
+\begin{minipage}[t]{\linewidth}
+\begin{example}
+\BODY
+\end{example}%
+\end{minipage}%
+}%
+
+\newtheorem*{solution}{Solution}
+\mdfdefinestyle{sol}{
+  linecolor=red,
+  % , rotatebox
+}
+\surroundwithmdframed[style=sol]{solution}
+
+\usepackage{environ}
+\NewEnviron{Solution}
+{%
+\noindent
+\begin{minipage}[t]{\linewidth}
+\begin{solution}
+\BODY
+\end{solution}%
+\end{minipage}%
+}%
 
 
 \pagestyle{fancy}
@@ -405,6 +446,35 @@ $$\phi_i(t_2)-\phi_i(t_1) = \phi_x(t_2) - \phi_x(t_1) \approx 2\pi f_0 \Delta t.
 
 \section{Range-FFT}
 \section{Doppler-FFT}
+\subsection{Scenario 1: a stationary source and a moving receiver}
+When the source is stationary and the receiver is moving, the perceived signal frequency $f_1$ is 
+$$f_1 = \left(\frac{v - v_r}{v}\right)\cdot f_0,$$
+where $f_0$ is the frequency of the original signal, $f_1$ is the frequency of the received signal, $v$ is the velocity of the signal, and $v_r$ is the velocity of the receiver. 
+
+Notice that if the receiver has a velocity $v_r = v$, then the signal will never reach the receiver, and $f_1 = 0$.
+
+
+
+\subsection{Scenario 2: a moving source and a stationary receiver}
+When the source is moving and the receiver is stationary, the perceived signal frequency $f_1$ is 
+$$f_1 = \left(\frac{v}{v - v_s}\right)\cdot f_0,$$
+where  $v_s$ is the velocity of the source. 
+
+In case the source is traveling at the same speed of the signal, all the signal it has been transmitting will stay on the same instant time moment, making the frequency infinity.
+
+\subsection{Scenario 3: a stationary source, a moving object, and reflected signals}
+If the source sends a signal to the object and the signal gets reflected and travels back to the source, the reflected signal perceived by the source should have a frequency $f_2$ such that 
+$$f_2 = \left(\frac{v-v_r}{v+v_r}\right)\cdot f_0$$
+
+\subsection{Scenario 4: a moving source, a stationary object, and reflected signals}
+This is similar to the above scenario. We should notice that before the reflection happens, the object is the receiver; after the reflection happens, the object becomes the sender and the original source becomes the receiver.  The received signal would have frequency $ƒ_2$ such that
+$$f_2 = \left(\frac{v+v_s}{v-v_s}\right)\cdot f_0.$$
+
+Notice that $v_s$ can move in both directions, and the above formula is merely the same as that in the previous scenario.
+
+\subsection{Other notes}
+
+
 The \emph{Doppler Effect} states that an observer should perceive the change in frequency for a source signal from a moving object. When the object is moving toward the observer, the perceived signal frequency should be higher; when the object is moving away from the observer, the perceived signal frequency should be lower. The following formula captures the relationship of the observed signal frequency and the source signal frequency:
 
 
@@ -435,9 +505,92 @@ f_o &= f_s \cdot (1-\frac{v_0}{v})(1 + \frac{v_s}{v})\cdot (1+\frac{v_s}{v})(1 -
 & \approx f_s \cdot \left( 1 + \frac{2\cdot \Delta v}{v}\right)
 \end{align*}
 
-Therefore, $$\Delta f = f_o - f_s \approx \frac{2\cdot \Delta v}{v}.$$
+Therefore, $$\Delta f = f_o - f_s \approx \frac{2\cdot \Delta v}{v},$$
+for very large $v$, such as the speed of light.
+
+\begin{example}
+Assume that an object vibrates along the $x$-axis with a constant velocity and a colocated speaker-microphone is used to determine the vibration and its velocity. Assume that the constant back-and-forth velocity of the object is $25$ m/s, and the speaker-microphone is placed at $50$ cm away from the object. If the speaker is transmitting a sine-tone of $10$ Hz and the microphone has a sampling rate of $40$ Hz, how many minimum numbers of discrete samples would the microphone need to determine the object's vibration correctly as $\pm 25$ m/s?
+
+Assume that there is no loss or distortion of the sine-tone when it is reflected off the object and arrive at the microphone, and the speed of sound is $340$ m/s. 
+\begin{center}
+\begin{asy}
+import graph;
+import patterns;
+add("hatch",hatch(1.5mm));
+
+unitsize(20pt);
+pair a = (-1,0), b = (10,0);
+draw(a -- b, linewidth(1pt));
+label("\faVolumeUp", (-0.3,0));
+label("\faMicrophone", (-0.3,-0.55));
+
+typedef real realfunc(real);
+
+realfunc sinx(real freq) {
+    real f(real x) {
+        return sin(freq*x);
+    }
+    return f;
+}
+path w = graph(sinx(2), 0, pi*3/2, 100);
+draw(w);
+
+filldraw(box((8,-0.4), (9,0.4)), pattern("hatch"), linewidth(1pt));
+draw((7.5,-0.8)--(9.5,-0.8), arrow=Arrows());
+
+\end{asy}
+\end{center}
+\end{example}
+
+\begin{Solution}
+If the object is moving toward the speaker, the frequency $f_1$ of signal received by the microphone should be
+$$f_1 = 10\cdot \frac{340 + 25}{340 - 25} \approx 11.587;$$
+if the object is moving away from the speaker, the frequency $f_2$ of signal received by the microphone should be 
+$$f_2 = 10\cdot \frac{340-25}{340+25} \approx 8.630.$$
+
+In order to detect the frequency difference between $f_1$ and $f_2$, we have to make sure the number of samples we collect will result a frequency resolution less or equal to $|f_1 - f_2| = 2.957.$ Hence,
+$$\frac{f}{N} \le 2.957 \qquad \Rightarrow \qquad N \ge \frac{f}{2.957} = \frac{40}{2.957} \approx 13.53.$$
+
+Therefore, the minimum number of samples we should collect is $14$.
+\end{Solution}
 
 \section{Angle-FFT}
+
+\section{Markov Model}
+\subsection{Probability Rules}
+\begin{enumerate}
+\item Joint probability 
+$$P(A, B) = P(A)\cdot P(B)$$
+
+\item Conditional probability 
+$$P(A | B) = \frac{P(A, B)}{P(B)}$$
+
+\item Marginal probability 
+$$P(B) = \sum_{i} P(B | A_i) $$
+
+\item Chain rule
+$$P(A, B, C) = P(A | B, C)\cdot P(B, C) = P(A | B, C)\cdot P(B | C)\cdot P(C)$$
+
+\item Bayes rule
+$$P(A_i | B) = \frac{P(A_i, B)}{P(B)} = \frac{P(B | A_i)\cdot P(A_i)}{P(B)} = \frac{P(B | A_i)\cdot P(A_i)}{\sum_{i}P(B, A_i)} =  \frac{P(B | A_i)\cdot P(A_i)}{\sum_{i}P(B | A_i)\cdot P(A_i)}$$
+\end{enumerate}
+
+\subsection{Hidden Markov Model}
+We should be able to identify the most probable hidden state sequence given an observation using HMM.
+
+$$P(S_{1:n} | M_{1:n}) = \frac{P(S_{1:n}, S_{1:n})}{P(S_{1:n})},$$
+and 
+\begin{align*}
+&P(S_{1:n}, M_{1:n})\\
+& = P(M_n|M_{1:n-1}, S_{1:n})\cdot P(M_{1:n-1}, S_{1:n})\\
+& = P(M_n|M_{1:n-1}, S_{1:n})\cdot P(M_{n-1}|M_{1:n-2}, S_{1:n})\cdot P(M_{1:n-2}, S_{1:n})\\
+& = P(M_n|M_{1:n-1}, S_{1:n})\cdot P(M_{n-1}|M_{1:n-2}, S_{1:n})\cdots P(M_1|S_{1:n})\cdot P(S_n|S_{1:n-1})\cdots P(S_2|S_1)\cdot P(S_1)
+\end{align*}
+
+Regarding the First-Order Markov Model, where observation $M_i$ only depends on state $S_i$, and  $S_i$ only depends on $S_{i-1}$, we have
+$$P(S_{1:n}, M_{1:n})  = P(M_n|S_n)\cdot P(M_{n-1}|S_{n-1})\cdots P(M_1|S_1)\cdot P(S_n|S_{n-1})\cdots P(S_2|S_1)\cdot P(S_1).$$
+
+$P(S_i|S_{i-1})$ is just the transition probability that's usually known. It's generally easy to find out $P(M_i|S_i)$, which is the probability of observing $M_i$ from state $S_i$. Therefore, $P(S_{1:n}, M_{1:n})$ can be calculated.
 
 \subsection{other notes}
 
