@@ -1,0 +1,500 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+%\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+%\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=25mm,
+ bottom=25mm
+ }
+
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{enumerate}
+\usepackage{arcs}
+\usepackage{cancel}
+\usepackage{xfrac}
+\usepackage{amsthm}
+\usepackage{gensymb}
+\usepackage{xspace}
+\usepackage{hyperref}
+\usepackage{fancyvrb}
+\usepackage{fontawesome}
+
+
+\usepackage{listings}
+\usepackage[most]{tcolorbox}
+\usepackage{inconsolata}
+
+\newtcblisting[auto counter]{sexylisting}[2][]{sharp corners, 
+    fonttitle=\bfseries, colframe=gray, listing only, 
+    listing options={basicstyle=\ttfamily,language=java}, 
+    title=Listing \thetcbcounter: #2, #1}
+
+%\usepackage{ctex}
+
+%SetFonts
+
+%SetFonts
+
+\usepackage[inline]{asymptote}
+
+
+\usepackage[framemethod=tikz]{mdframed}
+
+\newtheorem{example}{Example}
+\mdfdefinestyle{examp}{
+  linecolor=cyan,
+  backgroundcolor=yellow!20
+  % , rotatebox
+}
+\surroundwithmdframed[style=examp]{example}
+
+\usepackage{environ}
+\NewEnviron{Example}
+{%
+\noindent
+\begin{minipage}[t]{\linewidth}
+\begin{example}
+\BODY
+\end{example}%
+\end{minipage}%
+}%
+
+\newtheorem*{solution}{Solution}
+\mdfdefinestyle{sol}{
+  linecolor=red,
+  % , rotatebox
+}
+\surroundwithmdframed[style=sol]{solution}
+
+\usepackage{environ}
+\NewEnviron{Solution}
+{%
+\noindent
+\begin{minipage}[t]{\linewidth}
+\begin{solution}
+\BODY
+\end{solution}%
+\end{minipage}%
+}%
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\leftmark}
+\cfoot{\thepage}
+
+\title{3D Finger Motion Tracking Using Ultrasound and Millimeter-Wave Sensing}
+\author{(Project Intermediate Report)\\ \\Zifei (David) Zhong and Guangyi (Simona) Chen}
+\date{March 28, 2023}							% Activate to display a given date or no date
+
+\newcommand{\latex}{\LaTeX\xspace}
+
+
+\begin{document}
+\maketitle
+
+\section{Tasks Accomplished}
+What we have accomplished so far are summarized in Table~\ref{tab:accomplished}. We did extensive literature research to make sure that we are aware of related research work so that in our project we can differentiate our work and also compare with the state-of-the-art. All related works are included in section~\ref{sec:app:related}.
+
+\begin{table}[ht]
+\centering
+\caption{Tasks accomplished}
+\label{tab:accomplished}
+\vspace{4pt}
+\begin{tabular}{|c|l|c|}
+\hline
+\# & \multicolumn{1}{|c|}{Task Items} & Status  \\
+\hline
+\hline
+1 & Literature research & finished\\
+\hline
+2 & Collect experiment devices & finished \\ 
+\hline
+3 & Data collection with mmWave device & finished\\
+\hline
+4 & Code base understanding (mmWave) & finished \\
+\hline
+\end{tabular}
+\end{table}
+
+In last two weeks, we also found some research papers that are published recently and are related to our projects~\cite{ref:mmmic23}. We might add more research papers as reference in the coming month since research work are published every month.
+
+We collected the ultrasound device from Professor Sanjib Sur. We got the the Matlab code of collecting and processing ultrasound data from Reza Tavasoli. We have collected data using the mmWave device for scenarios where people are moving fingers and talking in front of the mmWave radar. The ultrasound device is relatively easy to work with. We spent most of our effort working with the mmWave devices.
+
+\section{Issues Encountered and Solutions}
+At the initial stage we had troubles setting up the mmWave devices. Jackie Schellberg gave us her mmWave device but it turned out that device was not working properly. We ended up using the devices that's set up in the Horizon-I lab. We leveraged help from Hem Regmi, Moh Sabbir Saadat, and Aakriti Adhikari and finally got the device working to automatically collect data.
+
+We had several other issues. For example, we could not understand the Matlab code for collecting and post-processing data at the beginning. We finally got them solved. Table~\ref{tab:issues} summarizes all the issues encountered and the solutions.
+
+
+\begin{table}[ht]
+\centering 
+\caption{Issues encountered and solutions}
+\label{tab:issues}
+\vspace{4pt}
+\begin{tabular}{|c|l|c|}
+\hline
+\# &  \multicolumn{1}{|c|}{Issues} & Solutions  \\
+\hline
+\hline
+1 & mmDevice issue & Jackie Schellberg provided\\
+\hline
+2 & Data collection issue & Moh Sabbir Saadat helped \\
+\hline
+3 & mmWave data post-processing code & Aakriti Adhikari  helped\\
+\hline
+4 & FMCW understanding & Sandeep Rao video/slides \\
+\hline
+5 & Matlab code base understanding & Experimenting  \\
+\hline
+\end{tabular}
+\end{table}
+
+We have noted down all our understanding of the FMCW with respect to the IWR1443 board in section~\ref{sec:app:fmcw}. When experimenting with existing Matlab code, we also programmed example code~\cite{ref:code} for studying purposes.
+
+
+
+\section{Changes in the Proposed Tasks}
+Since there are existing research work on fine-grained finger motion tracking with great accuracy~\cite{ref:mm4arm23}, we think that tracking the lip motion of a human and to help people with speaking disabilities might be a good direction to work on. There are some recent research papers published related to recognizing lip motion~\cite{ref:mmmic23} or jaw motion~\cite{ref:muteit22}. 
+
+We will include lip/jaw motion detection into our work. We believe once we setup our fundamental framework, we can target a set of applications that involves identifying vibrations with mmWave technology.
+
+\section{Timeline of Pending Tasks}
+At this stage, there are several outstanding tasks pending. For example, we have to compare the spectrograms of lip motions from both ultrasound and mmWave data. From there, we can build the algorithms to recognize speech or finger motions. We might need to leverage machine learning to help identify features of vibrations generated by different motions. The pending tasks and timeline are shown in Table~\ref{tab:pending}.
+
+\begin{table}[ht]
+\centering 
+\caption{Timeline of pending tasks}
+\label{tab:pending}
+\vspace{4pt}
+\begin{tabular}{|c|l|c|}
+\hline
+\# &  \multicolumn{1}{|c|}{Pending Tasks} & Timeline  \\
+\hline
+\hline
+1 & Spectrograms of speaking scene, both ultrasound and mmWave& 04/02\\
+\hline
+2 &  Identifying speaking/non-speaking scenes by mmWave & 04/07\\
+\hline
+3 & Extract features for finger motions, lip motions & 04/12\\
+\hline
+4 &  Try fusing with ultrasound and mmWave for fine grain performance & 04/17 \\
+\hline
+5 &  Try speech recognition or finger motion recognition& 04/22   \\
+\hline
+6 & Final report and demo & 04/22 \\
+\hline
+\end{tabular}
+\end{table}
+
+The plan is try to use mmWave device and ultrasound to analyze a simple scenarios where only several words are spoken. If we can see obvious difference in phase shifting, we then can design algorithm to extract these shifting as features and then use them to identify the motions. We plan to get this simple scenario analysis done by April 2. Once that's achieved, we will go on to do a binary classification for the speaking/non-speaking detection with mmWave. Upon completion of the first two pending items, we will have great confidence to finish the project with great results.
+
+
+\newpage
+\section{Appendix I: FMCW and IWR1443BOOST}
+\label{sec:app:fmcw}
+\subsection{FMCW}
+\subsubsection{Minimum Range of a Radar}
+
+\begin{table}[t]
+\centering
+\caption{Notations}
+\label{tab:notation}
+\vspace{4pt}
+\begin{tabular}{c|l|l}
+\hline
+\textbf{Symbol} & \textbf{Explanation} & \textbf{\centering Note} \\
+\hline
+\hline
+$c$ & speed of the light & $3\times 10^8$ meters per second\\
+\hline
+$d$ & distance between transmitter and obstacle & \\
+\hline
+$\Delta t$ &signal round-trip time wrt obstacle & \\
+\hline
+$\Delta f$ & frequency difference of the Tx/Rx signals & \\
+\hline
+$f_0$ & starting frequency & 77 GHz for TI IWR1443 board \\
+\hline
+$T$ & chirp's duration & 60 us in our experiment \\
+\hline
+$S$ & frequency increase pace (slope) & 29.982 MHz/us in our experiment\\
+\hline
+$B$ & bandwidth of a chirp, $B=T\cdot S$ & $29.982 \times 60 = 1.79892$ GHz \\
+\hline
+$\phi(t)$ & phase of signal at time $t$ & $\phi_x(t), \phi_r(t), \phi_i(t)$: Tx, Rx, IF\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}
+\centering
+\begin{asy}
+unitsize(22pt);
+defaultpen(linewidth(1pt));
+
+arrowbar hookhead = Arrow(HookHead, size=7, angle=20);
+arrowbar smallarrows = ArcArrows(size=4, angle=35);
+pen thinline = linewidth(0.6pt);
+
+real width = 9, height = 6;
+pair a1 = (-1, 0), a2 = a1 + (width, 0);
+pair b1 = (0, -1), b2= b1 + (0, height);
+draw(a1 -- a2, hookhead);
+draw(b1 -- b2, hookhead);
+label("time", a2/2+(0,-1), S);
+label(rotate(90)*"frequency", b2/2 -(1,0), W);
+
+label("$f_0$", a1, W);
+
+// Tx and Rx signals
+pair c1 = (0,0), c2 = (3,3), c3 = (3,0), c4 = (4.5,1.5);
+pair d1 = (1,0), d2 = (4,3), d3 =(4,0), d4 = (5.5,1.5);
+
+draw(c1 -- c2 -- c3 -- c4, fuchsia);
+draw(d1 -- d2 -- d3 -- d4, royalblue);
+
+// legend
+pair lb = (c4+d4)/2;
+Label laR = Label("{\small Rx signal}", position=EndPoint);
+draw((lb.x, lb.y+2.65)--(lb.x+1, lb.y+2.65), L=laR, royalblue);
+Label laT = Label("{\small Tx signal}", position=EndPoint);
+draw((lb.x, lb.y+2)--(lb.x+1, lb.y+2), L=laT, fuchsia);
+
+// chirp duration T
+Label la1 = Label("$T$", align=(0,0), position=MidPoint, filltype=Fill(white));
+draw((0,-0.5) -- (c3.x, c3.y-0.5), L=la1, arrow=smallarrows, bar=Bars, p=thinline);
+
+// Bandwith of FMCW
+Label la2 = Label("$B$", align=(0,0), position=MidPoint, filltype=Fill(white));
+draw ((-0.5,0) -- (-0.5, c2.y), L=la2, arrow=smallarrows, bar=Bars, p=thinline);
+draw(d2 -- (0, c2.y), dotted);
+
+// Time difference of the Tx and Rx signals
+Label la3 = Label("{\small $\Delta t$}", align=(0,1));
+draw((c2.x, c2.y+0.5) -- (d2.x, d2.y+0.5), L=la3, arrow=smallarrows, bar=Bars, p=thinline);
+
+// Frequency difference of the Tx/Rx signals
+draw((c2.x, c2.y-1) -- (0, c2.y-1), dotted);
+
+pair e1 = c3+0.7*(c4-c3), e2 = e1 - (0,1);
+Label la4 = Label("{\small $\Delta f$}", align=(0.6,0));
+draw((0.5, c2.y-1) -- (0.5, c2.y), L=la4, arrow=smallarrows, bar=Bars, p=thinline);
+\end{asy}
+\caption{FMCW explanation}
+\label{fig: fmcw}
+\end{figure}
+
+Let's assume the transmitting signal is $x(t) = \cos \psi (t)$, we have $$f(t) = f_0 + \frac{B}{T}\cdot t, \qquad \frac{d\psi(t)}{dt} = 2\pi\cdot f(t),$$ and thus 
+$$\psi(t) = \int f(t) dt = 2\pi \int (f_0+\frac{B}{T}\cdot t) dt = 2\pi f_0\cdot t + \frac{\pi B}{T}\cdot t^2.$$
+The transmitting signal is therefore
+$$x(t) = \cos (2\pi f_0\cdot t + \frac{\pi B}{T}\cdot t^2).$$
+
+In reality, taking the TI IWR1443 board as an example, the transmitting bandwidth $B$ is determined by the chirp's duration and the slope that characterizes the increasing pace of the signal. Users can specify the slope and the duration of a chirp while operating the TI IWR1443 board.
+
+In experiment, the TI IWR1443 board transmits a signal $x(t_0)$ with frequency $f(t_0)$ to an obstacle and receives the signal bounced back from the obstacle. When the return signal arrives at the board at time $t_1$, the mixer component of the board will \emph{mix} the signal $x(t_0)$ with the transmitting signal at $t_1$, e.g., $x(t_1)$ with frequency $f(t_1)$, to generate an intermediate signal with frequency $\Delta f = f(t_1) - f(t_0)$. 
+
+From the TI IWR1443 board, it's easy to observe the intermediate signal's frequency $\Delta f$ (it's difficult to measure the round-trip time of the signal directly), and deduce the round-trip time of the signal 
+$$\Delta t = \frac{\Delta f}{S},$$
+and future deduce the distance from the transmitter to the obstacle 
+$$d = \frac{1}{2}\cdot \Delta t \cdot c = \frac{c}{2S}\cdot \Delta f.$$
+
+It's important to notice that the above equation states clearly the connection between distance and frequency: $\Delta f$ is proportional to $d$.
+
+With the chirp transmitting bandwidth $B$, transmitting time $T$, the minimum frequency that can be captured by the device is 
+$$\Delta f_{min} = \frac{1}{T} = \frac{S}{B}, $$ and the minimum distance (range resolution) between two obstacles that could be captured by the radar is then 
+$$d_{min} = \frac{c}{2S}\cdot \Delta f_{min} = \frac{c}{2B},$$
+where bandwidth $B$ is the key factor that determines the range resolution.
+
+\subsubsection{Maximum Range of a Radar}
+When design a radar, we must have in mind the maximum distance the radar can reach to detect obstacles. Given that we know $\Delta f$ is proportional to the obstacle's distance $d$, when $d$ is large, we will get a large $\Delta f$,  which in reality should be digitalized by an ADC device with sampling rate $f_s \ge \Delta f$. In fact, the ADC sampling rate is the key factor that limits the capability of the radar. Given a sampling rate $f_{max}$, we have the maximum distance that a radar can reach is 
+$$d_{max} = \frac{c}{2S}\cdot  f_{max}.$$
+
+Essentially, the $f_{max}$ of a TI IWR1443 board is just the bandwidth $B$. The $d_{max}$, in theory, is half of the distance that the wave can travel in the duration of the chirp. If the chirp duration is 60 us, then $d_{max} = 3\times 10^8 \times 60 \times 10^{-6} = 1.8\times 10^4$ meters. However, in practice our sampling rate can not reach $1.8$ GHz. With a sampling rate $1\times 10^7$ Hz, the maximum distance is $3\times 10^8 \cdot \frac{10^7}{2\times 30\times 10^6\times 10^6} = 50$ meters (slope $B$ is 30 MHz/us, which is $30\times 10^6 \times 10^6$ Hz/s).
+
+\subsubsection{Phase}
+
+\begin{figure}
+\centering
+\begin{asy}
+unitsize(25pt);
+defaultpen(linewidth(1pt));
+import graph;
+
+arrowbar hookhead = Arrow(HookHead, size=7, angle=20);
+arrowbar hookheads = Arrows(HookHead, size=7, angle=20);
+arrowbar smallarrows = ArcArrows(size=4, angle=35);
+pen thinline = linewidth(0.6pt);
+pen dashed=linetype(new real[] {4,4});
+
+
+real freq = 0.1, slope=0.2, theta = -pi/2, t1=1.3, t2=2.2, height=3.5;
+int len = 8;
+
+pair o = (0,0), x1=(11,0), y1 = (0,2);
+path crd1 = x1 -- o -- y1;
+draw(crd1, hookheads);
+
+path crd2 = shift((0,-height))*crd1;
+draw(crd2, hookheads);
+
+path crd3 = shift(0,-2*height)*crd1;
+draw(crd3, hookheads);
+
+
+void smalldot(pair a) {
+    dot(a, linewidth(5pt));
+}
+
+real fmcw(real x) {
+    return cos(2*pi*freq*x + pi*slope*x*x + theta);
+}
+
+typedef real realfunc(real);
+
+realfunc ifwave(real delta) {
+    real func(real x) {
+        return cos(2*pi*(slope*delta)*x+2*pi*freq*delta);
+    }
+    
+    return func;
+}
+
+real lstart=8, llen=0.8;
+
+path w1 = graph(fmcw, 0, len, 400);
+draw(w1, fuchsia);
+
+Label laT = Label("{\small Tx signal}", position=EndPoint);
+draw((lstart, 1.5)--(lstart+llen, 1.5), L=laT, fuchsia);
+
+path w2 = shift((t1,-height))*w1;
+draw(w2, royalblue);
+path w21 = shift((t2-t1,0))*w2;
+draw(w21, royalblue+dashed);
+Label laR = Label("{\small Rx signal}", position=EndPoint);
+draw((lstart,-height+1.5)--(lstart+llen, -height+1.5), L=laR, royalblue);
+
+path w3 = shift((t1, -2*height))*graph(ifwave(t1), 0, len, 400);
+draw(w3, orange);
+path w31 = shift((t2, -2*height))*graph(ifwave(t2), 0, len, 400);
+draw(w31, orange+dashed);
+Label laF = Label("{\small IF signal}", position=EndPoint);
+draw((lstart, -2*height+1.5)--(lstart+llen, -2*height+1.5), L=laF, orange);
+
+draw((t1,-2*height-0.05)--(t1,1.5), dotted);
+draw((t2,-2*height-0.05)--(t2,1.5), dotted);
+
+pair ph0 = (0,0);
+smalldot(ph0);
+pair ph1 = (t1, fmcw(t1));
+smalldot(ph1);
+pair ph2 = (t2, fmcw(t2));
+smalldot(ph2);
+pair ph3 = (t1, -height);
+smalldot(ph3);
+pair ph4 = (t2, -height);
+smalldot(ph4);
+pair ph5 = (t1, ifwave(t1)(0)-2*height);
+smalldot(ph5);
+pair ph6 = (t2, ifwave(t2)(0)-2*height);
+smalldot(ph6);
+
+label("$t_0$", (0, -2*height), S);
+label("$t_1$", (t1, -2*height), S);
+label("$t_2$", (t2, -2*height), S);
+
+label("\small $\phi_x(t_0)$", ph0, NW);
+label("\small $\phi_x(t_1)$", ph1, NW);
+label("\small $\phi_r(t_1)$", ph3, NW);
+label("\small $\phi_i(t_1)$", ph5, NW);
+label("\small $\phi_x(t_2)$", ph2, SE);
+label("\small $\phi_r(t_2)$", ph4, SE);
+label("\small $\phi_i(t_2)$", ph6, NE);
+\end{asy}
+\caption{Phase analysis of an IF signal}
+\label{fig:phase}
+\end{figure}
+
+Given
+$$x(t) = \cos(2\pi f_0 t+ \pi \cdot S\cdot t^2), \qquad \text{and}\qquad t_2 = t_1 + \Delta t,$$
+we have
+\begin{align*}
+\phi_x(t_2) - \phi_x(t_1) &= (2\pi f_0 t_2 + \pi\cdot S\cdot t_2^2) - (2\pi f_0 t_1 + \pi\cdot S\cdot t_1^2) \\
+& = \left[2\pi f_0 (t_1+\Delta t) + \pi\cdot S\cdot (t_1 + \Delta t)^2\right] - (2\pi f_0 t_1 + \pi\cdot S\cdot t_1^2) \\
+& = 2\pi f_0 \Delta t + 2\pi\cdot S\cdot t_1 \cdot \Delta t + \pi \cdot S\cdot \Delta t^2\\
+& = 2\pi f_0 \Delta t + 2\pi \Delta f \cdot t_1 + \pi \cdot \Delta f \cdot \Delta t \\
+& \approx 2\pi f_0 \Delta t \qquad (\text{when } \Delta f <\frac{S}{B})
+\end{align*}
+
+For the above equation, the first term dominates since in reality $f_0$ is at $\sim$ 10GHz level while the other two terms are $\sim \frac{1}{100}$ of the first term. Most importantly, phase analysis is used when the range could not be differentiated (when $\Delta f < \frac{S}{B}$). When two obstacles are too close to be differentiated by their frequencies, we do phase analysis to deduce their distance (based on  phase shifting). In applications such as vibration detection, the vibrations are tiny scale changes and they don't cause discernible differences in frequency, but they usually trigger observable changes in phases. In general, we should know that phase is much more sensitive to small changes.
+
+Figure~\ref{fig:phase} illustrates the scenario where the Rx signal gets delayed because of tiny movement of the obstacle (moving away from the radar). Instead of coming back at $t_1$, the Rx signal arrives at $t_2$ (with delay $\Delta t = t_2 - t_1$).  Since
+$$\phi_i(t_1) = \phi_x(t1) - \phi_r(t_1), \qquad \phi_i(t_2) = \phi_x(t2) - \phi_r(t_2), \qquad \phi_r(t_2) = \phi_r(t1) = \phi_x(t_0),$$
+the phase shifting for the IF signal is
+$$\phi_i(t_2)-\phi_i(t_1) = \phi_x(t_2) - \phi_x(t_1) \approx 2\pi f_0 \Delta t.$$
+
+section{Experiments}
+The millimeter wave device we use for experiment is IWR1443BOOST board, with 3 transmitter and 4 receiver antennas and transmitting frequency between 76 GHz to 81 GHz.
+
+\subsection{IWR1443BOOST}
+\subsubsection{Parameters}
+For chirp transmission, each chirp lasts for 66 us, followed by a 100 us idle period. In total, each chirp transmission costs 166 us. In each frame, we usually have 128 chirps transmitted with a single transmitter, 64 chirps with two transmitters, or 32 chirps for three transmitters. With three transmitters, each frame costs $166\times 32 = 5312$ us. Since we reserve 40 ms for each frame, the duty cycle of each frame is then $\frac{166\times 32}{40\times 1000} = 13.28\%.$ We transmit 250 frames in total, and the whole process lasts for $250 \times 40 = 10000$ ms (10 seconds).
+
+However, the ramp-type analog-to-digital converter (also known as ramp-compare or time-base ADC) starts 6 us after the beginning of each chirp, and the useful transmission is hence $66 - 6 = 60$ us. With a frequency slope ($S$) 29.982 MHz/us, the bandwidth (maximum frequency difference) is $29.982 \times 60 = 1798.92$ MHz (the maximum bandwidth supported by the TI IWR1443BOOST board is 3959.88 MHz).
+
+With a sampling window of 60 us, the minimum frequency difference ($\Delta f$) that can be captured is $\frac{10^6}{60} \approx 1.7\times 10^4$ Hz, which corresponds to time difference $\Delta t = \frac{\Delta f}{S} = \frac{10^6}{60\times 29.982 \times 10^6} \approx 5.6\times 10^{-4}$ us, and this corresponds to a distance $\Delta d = \frac{1}{2}\cdot c\cdot \Delta t = 3\times 10^8 \times 5.6\times 10^{-4}\times 10^{-6} = 8.4\times 10^{-2}$ meters (8.4 cm). It's easy to see that the best range resolution that a device with 4G Hz bandwidth can achieve is about 4 cm. This means that if two obstacles are too close to each other and their IF signals might have frequencies with difference less than $\Delta f$, and the FFT won't be able to differentiate the two IF signals in frequency domain.
+
+With FMCW, a reflection chirp will be mixed with the transmitting chirp to form an intermediate frequency (IF), which has a frequency that is the difference of the frequency of the transmitting chirp and the frequency of the reflection chirp. The IF frequency ($\Delta f$) can be easily observed during an experiment, and thus we can calculate the distance of the obstacle that causes the reflection: 
+$$\Delta f = S\cdot \Delta t = S\cdot \frac{2d}{c} \qquad \Rightarrow \qquad d = \frac{c}{2S}\cdot \Delta f.$$
+
+\subsubsection{The Transmitting Signal}
+Let's review briefly how the IF signal gets generated. On the mmWave device, there is a `mixer'  component that takes the reflected signal and the transmitting signal as inputs, and generates a mixed signal that is the \emph{multiplication} of the two input signals. Given two input signals 
+$$x_1 = \cos(\omega_1 t + \phi_1) \qquad \text{and}\qquad x_2 = \cos(\omega_2 t + \phi_2),$$
+the multiplied signal should be 
+\begin{align*}
+y = x_1 \cdot x_2  = & \cos(\omega_1 t + \phi_1) \cdot \cos(\omega_2 t + \phi_2) \\
+= & \frac{1}{2}\left(\cos\left[(\omega_1 t +\phi_1)+ (\omega_2 t +\phi_2)\right]+ \cos\left[(\omega_1 t +\phi_1)- (\omega_2 t +\phi_2)\right]\right)\\
+= & \frac{1}{2}\left(\cos\left[(\omega_1 +\omega_2) t + (\phi_1 +\phi_2)\right]+ \cos\left[(\omega_1 - \omega_2) t + (\phi_1 - \phi_2)\right]\right)
+\end{align*}
+
+Notice that the above resulted signal is essentially a wave with two very different frequencies: $(\omega_1 + \omega_2)$ and $(\omega_1 - \omega_2)$. In our mmWave experiments, $w_1$ and $w_2$ are frequencies between 77 GHz and 81 GHz, while the difference $(w_1 - w_2)$ is at most 4 GHz (the bandwidth of the TI IWR1443BOOST mmWave board is 4 GHz). The mixer component filters out the signal with frequency $(w_1 + w_2)$, and keeps the signal with frequency  $(w_1 - w_2)$ as the output IF signal:
+$$y = \cos\left[(\omega_1 - \omega_2) t + (\phi_1 - \phi_2)\right].$$
+
+The output IF signal has a much lower frequency and it's easier to do sampling for signal processing purposes. The IF signal has a phase of $(\phi_1 - \phi_2)$, which is the difference of the phase of the transmitting signal and the phase of the reflected signal. (Should the phase of the transmitting signal be 0?)
+
+We have a sample rate of 10000 ksps (kilo-samples per second), and we want to have 256 samples for each chirp. Effectively, for each chirp, our sampling duration is $256\times\frac{1}{10^4\cdot 10^3}\times 10^6 = 25.6$ us. 
+
+
+
+\section{Appendix II: Related Work}
+\label{sec:app:related}
+
+In recent years, there has been a growing interest in using acoustic-based sensing and machine learning techniques for hand gesture recognition. EchoFlex~\cite{ref:echoflex17} is one such system that combines ultrasound imaging and neural network techniques to classify a set of 10 discrete hand gestures with high accuracy. Researchers have also explored other ultrasound-based approaches, such as using the Micro-Doppler effect~\cite{ref:usgr19}, range-Doppler map~\cite{ref:hgr22}, machine learning~\cite{ref:mhgr18}, image corner feature detection~\cite{ref:usgdr21}, ultrasonic rangefinder~\cite{ref:ss12}, multiple receiver antenna~\cite{ref:usgr18}, or microphone array~\cite{ref:usgr17} to classify hand gestures.  Acoustic-based sensing and applications is generally discussed in~\cite{ref:absa20}. 
+
+There are also several studies that use millimeter wave technology for hand gesture recognition. In~\cite{ref:hgrmmv21, ref:slgrmmw22}, mmWave sensing based approaches are proposed to classify a given set of hand gestures. mmASL~\cite{ref:mmasl} is a system that uses 60 GHz millimeter-wave wireless signals to perform American Sign Language (ASL) recognition, while ExASL~\cite{ref:exasl20} recognizes sentence-level ASL. DeafSpaces~\cite{ref:deafspaces21} is another millimeter-wave-based system that can classify 15 different hand gestures. 
+
+Recent trend in hand gesture study is 3D finger motion tracking, such as NeuroPose~\cite{ref:neuropose21}, ssLOTR~\cite{ref:sslotr22}, and mm4arm~\cite{ref:mm4arm23}. In particular, mm4arm~\cite{ref:mm4arm23} tracks track 3D finger motion with a mmWave-based approach without relying on any wearables.
+
+
+Overall, these studies demonstrate the potential of using different sensing modalities and machine learning techniques to develop accurate and robust hand gesture recognition systems. However, none of them take advantages of both ultrasound and mmWave techniques to achieve joint-level fine-grain finger motion tracking.
+
+%\section{Motivation}
+%Motivation: (1) ASL recognition is important, good for the community with hearing disabilities. (2) Why mobile device and mmWave technology can help? (3) Current research has %limitations. (4) we propose ultrasound + mmWave, justify the reasons (goal is to improve accuracy).
+
+\bibliographystyle{plain}
+\bibliography{reference}
+
+\end{document} 
