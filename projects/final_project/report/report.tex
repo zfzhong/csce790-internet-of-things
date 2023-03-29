@@ -96,8 +96,8 @@
 \cfoot{\thepage}
 
 \title{3D Finger Motion Tracking Using Ultrasound and Millimeter-Wave Sensing}
-\author{(Project Proposal)\\ \\Zifei (David) Zhong and Guangyi (Simona) Chen}
-\date{February 16, 2022}							% Activate to display a given date or no date
+\author{Zifei (David) Zhong and Guangyi (Simona) Chen}
+%\date{March 28, 2023}							% Activate to display a given date or no date
 
 \newcommand{\latex}{\LaTeX\xspace}
 
@@ -548,7 +548,7 @@ $$f_1 = 10\cdot \frac{340 + 25}{340 - 25} \approx 11.587;$$
 if the object is moving away from the speaker, the frequency $f_2$ of signal received by the microphone should be 
 $$f_2 = 10\cdot \frac{340-25}{340+25} \approx 8.630.$$
 
-In order to detect the frequency difference between $f_1$ and $f_2$, we have to make sure the number of samples we collect will result a frequency resolution less or equal to $|f_1 - f_2| = 2.957.$ Hence,
+In order to detect the frequency difference between $f_1$ and $f_2$, we have to make sure the number of samples we collect will result a frequency resolution lower than or equal to $|f_1 - f_2| = 2.957$ Hz. Hence,
 $$\frac{f}{N} \le 2.957 \qquad \Rightarrow \qquad N \ge \frac{f}{2.957} = \frac{40}{2.957} \approx 13.53.$$
 
 Therefore, the minimum number of samples we should collect is $14$.
