@@ -5,6 +5,7 @@ EMPTY_COLOR = "*"
 
 # Neighboring direction: Left, Up, Right, Down
 DIRECTIONS = ['L', 'U', 'R', 'D']
+COLORS = ['r', 'g', 'b', 'y']
 
 class DataMatrix:
     def __init__(self, num_rows, num_cols):
