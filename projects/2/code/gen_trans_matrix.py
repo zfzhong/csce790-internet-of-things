@@ -122,6 +122,30 @@ class TrainGrid:
             total += t['SUM']
         print("Total: %d" % total)
 
+    def dump_prob_full(self):
+        for i in range(0, self.grid.num_elements):
+            node = self.grid.get_node(i)
+            elems = []
+
+            for j in range(0, self.grid.num_elements):
+                if j == i:
+                    elems.append("%2d:%7.4f" % (j, self.prob[i]['O']))
+                    continue
+
+                is_neighbor = False
+                for d in DIRECTIONS:
+                    nb = node.neighbors[d]
+                    if nb and nb.id == j and not nb.is_empty():
+                        elems.append("%2d:%7.4f" % (j, self.prob[i][d]))
+                        is_neighbor = True
+                
+                if not is_neighbor:
+                    elems.append("%2d: 0.0000" % j)
+                
+            print('%s -> %s' % (str(node), ', '.join(elems)))
+
+
+
     def dump_train_data(self):
         print("----- dump train data: ------")
         for e in self.data_rows:
@@ -146,5 +170,6 @@ if __name__ == '__main__':
     #traingrid.dump_trans()
 
     traingrid.calc_prob()
-    traingrid.dump_prob()
+    #traingrid.dump_prob()
+    traingrid.dump_prob_full()
     

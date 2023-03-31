@@ -2,6 +2,7 @@
 
 from gen_matrix import states2key, id2coord
 
+
 NUM_STATES = 16
 
 
@@ -10,9 +11,7 @@ class VertibiAlgorithm:
         self.tm = tm
         self.em = em
         self.seq = seq
-        #self.delta = [[0,1/12,1/12,0,1/12,0,1/12,1/12,1/12,1/12,1/12,1/12,1/12,1/12,0,1/12]] # 12 squares
         self.delta = [[1]*NUM_STATES] 
-        #self.delta = [[0, 1, 1, 0, 17, 0, 6, 15, 22, 22, 11, 12, 40, 48, 0, 6]]
         self.prevs = []
         self.trace = []
 
@@ -56,14 +55,14 @@ class VertibiAlgorithm:
                 for id1 in range(0, NUM_STATES):
                     em_prob = self.get_em_prob(id1, ob)
                     tx_prob = self.get_tx_prob(id1, id2)
-                    val = self.delta[i-1][id2]*em_prob*tx_prob
+                    val = self.delta[i-1][id1]*em_prob*tx_prob
 
                     if val > m:
                         m = val
                         tid = id1
                 
                 ids.append(tid)
-                d.append(m)
+                d.append(m*100)
 
             self.prevs.append(ids)
             self.delta.append(d)
