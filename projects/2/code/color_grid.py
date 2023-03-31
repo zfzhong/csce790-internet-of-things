@@ -53,6 +53,7 @@ class GridNode:
         self.color = color
         self.num_neighbors = 0
         self.neighbors = {"L":None, "U":None, "R": None, "D": None}
+        self.adjacent_colors = []
 
     def is_empty(self):
         return self.color == EMPTY_COLOR
@@ -61,6 +62,8 @@ class GridNode:
         self.neighbors[direction] = node
         if not node.is_empty():
             self.num_neighbors += 1
+            if not node.color in self.adjacent_colors:
+                self.adjacent_colors.append(node.color)
 
     def neighbor(self, direction):
         direction = direction.upper()
@@ -92,8 +95,7 @@ class ColorGrid:
     def __init__(self):
         self.num_rows = 0
         self.num_cols = 0
-        self.mat = None
-        
+        self.mat = None        
 
     @property
     def num_elements(self):
@@ -131,7 +133,8 @@ class ColorGrid:
                     if i % self.num_cols > 0:
                         lnode = self.mat.get_element(i-1)
                         lnode.set_neighbor(n, 'R')
-                        n.set_neighbor(lnode, 'L')                    
+                        n.set_neighbor(lnode, 'L')       
+
                     # build top-down neighbors
                     if i // self.num_cols > 0:
                         dnode = self.mat.get_element(i-self.num_cols)

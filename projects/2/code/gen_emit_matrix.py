@@ -12,9 +12,14 @@ class TrainEmitGrid:
         self.data_rows = []
         self.emit = [None] * self.grid.num_elements
         self.prob = [None] * self.grid.num_elements
+
+        self.emit_adjacent = [None] * self.grid.num_elements
+        self.stats_adjacent = {"self": 0, "near": 0, "away": 0}
+
         for i in range(0, self.grid.num_elements):
             self.emit[i] = {"r": 0, "g": 0, "b": 0, "y": 0}
             self.prob[i] = {"r": 0, "g": 0, "b": 0, "y": 0}
+            self.emit_adjacent[i] = {"near": 0, "away": 0, "self": 0}
 
     def load(self, trainfile):
         with open(trainfile, 'r') as f:
@@ -30,6 +35,34 @@ class TrainEmitGrid:
 
                 line = f.readline()
 
+    def calc_emit_prob(self):
+        total = self.stats_adjacent['self'] + \
+            self.stats_adjacent['near'] + self.stats_adjacent['away']
+        for i in range(0, self.grid.num_elements):
+            node = self.grid.get_node(i)
+            if node.is_empty():
+                continue
+
+            for c in COLORS:
+                if c == node.color:
+                    self.prob[i][c] = self.stats_adjacent['self']/total
+                elif c in node.adjacent_colors:
+                    self.prob[i][c] = self.stats_adjacent['near'] / \
+                        (total*len(node.adjacent_colors))
+                elif len(node.adjacent_colors) + 1 < len(COLORS):
+                    self.prob[i][c] = self.stats_adjacent['away'] / \
+                        (total * (len(COLORS) - 1 - len(node.adjacent_colors)))
+
+    def dump_emit_prob(self, header=False):
+        if header:
+            print("----- dump emit probability: -----")
+
+        for i in range(0, len(self.prob)):
+            node = self.grid.get_node(i)
+            t = self.prob[i]
+            print('%s -> r:%7.4f, g:%7.4f, b:%7.4f, y:%7.4f' %
+                  (str(node), t['r'], t['g'], t['b'], t['y']))
+
     def get_emit_stats(self):
         for i in range(0, len(self.data_rows)):
             row = self.data_rows[i]
@@ -37,9 +70,20 @@ class TrainEmitGrid:
             self.emit[n][color] += 1
 
         for i in range(0, len(self.emit)):
+            node = self.grid.get_node(i)
             total = 0
             for c in COLORS:
                 total += self.emit[i][c]
+                if c == node.color:
+                    self.emit_adjacent[i]['self'] = self.emit[i][c]
+                elif c in node.adjacent_colors:
+                    self.emit_adjacent[i]["near"] += self.emit[i][c]
+                else:
+                    self.emit_adjacent[i]["away"] += self.emit[i][c]
+
+            self.stats_adjacent['self'] += self.emit_adjacent[i]['self']
+            self.stats_adjacent['near'] += self.emit_adjacent[i]['near']
+            self.stats_adjacent['away'] += self.emit_adjacent[i]['away']
 
             self.emit[i]["total"] = total
 
@@ -55,6 +99,19 @@ class TrainEmitGrid:
                   (str(node), t['r'], t['g'], t['b'], t['y'], t['total']))
             s += t['total']
         print("total: %d" % s)
+
+    def dump_emit_adjacency(self, header=False):
+        if header:
+            print("----- dump emit adjacency: -----")
+
+        for i in range(0, len(self.emit_adjacent)):
+            node = self.grid.get_node(i)
+            t = self.emit_adjacent[i]
+            print('%s -> self: %2d, near:%2d, away:%2d, total:%2d' %
+                  (str(node), t['self'], t['near'], t['away'], t['self']+t['near']+t['away']))
+
+        print("total -> self:%d, near: %d, away: %d" %
+              (self.stats_adjacent['self'], self.stats_adjacent['near'], self.stats_adjacent['away']))
 
     def dump_train_data(self, header=False):
         if header:
@@ -80,5 +137,8 @@ if __name__ == '__main__':
     # traingrid.dump_train_data()
 
     traingrid.get_emit_stats()
-    traingrid.dump_emit_stats(True)
-    
+    #traingrid.dump_emit_stats(True)
+    #traingrid.dump_emit_adjacency(True)
+
+    traingrid.calc_emit_prob()
+    traingrid.dump_emit_prob(False)
