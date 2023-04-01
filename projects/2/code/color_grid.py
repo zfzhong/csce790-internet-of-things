@@ -7,6 +7,11 @@ EMPTY_COLOR = "*"
 DIRECTIONS = ['L', 'U', 'R', 'D']
 COLORS = ['r', 'g', 'b', 'y']
 
+OB2ID = {"r":0, "g":1, "b":2, "y":3}
+
+def ob2id(ob):
+    return OB2ID[ob]
+
 class DataMatrix:
     def __init__(self, num_rows, num_cols):
         self.num_rows = num_rows

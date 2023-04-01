@@ -9,12 +9,18 @@
 # of observations, assuming that the transition matrix (tm) and emission matrix (em)
 # are provided.
 #
-# Note: In the implementation, we require that the transition matrix (tm) always has a
-# state "0", from which all other states originate. Or put it differently, the "starting
-# state" is always state "0". All other states are numbered from 1 to N.
-#
+# In the implementation, we require the following:
+# 1) The transition matrix (tm) always has a state "0", from which all other states
+#    originate. Or put it differently, the "starting state" is always state "0".
+# 2) The tansition matrix (tm) always has a state "N+1", which is the ending state.
+# 3) All other states are numbered from 1 to N.
+# 4) The transition probability from state i (1 <= i <= N) to state N+1 is 1.
+# 5) The emission probabiliy for state "N+1" is always 0, which means the state
+#    "N+1" doesn't emit anything.
 
+import sys
 from gen_matrix import states2key, id2coord
+from color_grid import ob2id
 
 
 class ViterbiAlgorithm:
@@ -24,6 +30,8 @@ class ViterbiAlgorithm:
 
     * args:
       n: number of states
+     tm: transition matrix
+     em: emission matrix
     seq: sequence of observations
     """
 
@@ -35,6 +43,14 @@ class ViterbiAlgorithm:
         self.delta = []
         self.prevs = []
         self.trace = []
+
+        self.init_delta()
+
+    def init_delta(self):
+        """
+        delta(0,:) is the first row of the transition matrix.
+        """
+        self.delta.append(self.tm[0])
 
     def dump_delta(self):
         for i in range(0, len(self.delta)):
@@ -52,56 +68,48 @@ class ViterbiAlgorithm:
             print("%s:%s %s" % (x, y, seq[i]))
 
     def get_em_prob(self, i, ob):
-        return self.em[i][ob]
+        j = ob2id(ob)
+        return self.em[i][j]
 
-    def get_tx_prob(self, id1, id2):
-        key = states2key(id1, id2)
-        if key in self.tm[id1]:
-            return self.tm[id1][key]
-
-        return 0
+    def get_tx_prob(self, i, j):
+        return self.tm[i][j]
 
     def predict(self):
         seq = self.seq
-        for i in range(1, len(seq)):
-            ob = seq[i - 1]
+        for k in range(0, len(seq)):
+            ob = seq[k]
 
-            d = []
-            ids = []
+            ds, ps = [], []
             for id2 in range(0, self.num_states):
-                m = 0
-                tid = 0
+                m, prev = 0, 0
                 for id1 in range(0, self.num_states):
                     em_prob = self.get_em_prob(id1, ob)
                     tx_prob = self.get_tx_prob(id1, id2)
-                    val = self.delta[i - 1][id1] * em_prob * tx_prob
+                    val = self.delta[k][id1] * em_prob * tx_prob
 
                     if val > m:
-                        m = val
-                        tid = id1
+                        m, prev = val, id1
 
-                ids.append(tid)
-                d.append(m * 100)
+                ps.append(prev)
+                ds.append(m)
 
-            self.prevs.append(ids)
-            self.delta.append(d)
+            # prevs[k]
+            self.prevs.append(ps)
 
-        ob = seq[-1]
-        m = 0
-        tid = 0
-        for id in range(0, NUM_STATES):
-            em_prob = self.get_em_prob(id, ob)
-            val = self.delta[-1][id] * em_prob
-            if val > m:
-                m = val
-                tid = id
+            # delta[k+1]
+            self.delta.append(ds)
 
-        # backtrace
-        self.trace = [tid]
-        for i in range(0, len(self.prevs)):
-            j = len(self.prevs) - i - 1
-            self.trace.append(self.prevs[j][tid])
-            tid = self.prevs[j][tid]
+    def backtrace(self, k):
+        """
+        The backtracing starts from delta(k, N+1), where 0 <= k < len(seq), and state "N+1"
+        is the ending state.
+        """
+        prev_state = self.prevs[k][-1]
+        self.trace.append(prev_state)
+
+        for i in range(k-1, -1, -1):
+            prev_state = self.prevs[i][prev_state]
+            self.trace.append(prev_state)
 
         self.trace.reverse()
 
@@ -133,6 +141,13 @@ def load_matrix(filename):
     return m
 
 
+def dump_matrix(m, format_str="%7.4f"):
+    for i in range(0, len(m)):
+        row = m[i]
+        s = ', '.join([format_str % e for e in row])
+        print(s)
+
+
 def load_observation_sequence(filename):
     seq = []
     with open(filename, 'r') as f:
@@ -147,36 +162,6 @@ def load_observation_sequence(filename):
     return seq
 
 
-def load_matrix(filename):
-    m = []
-    for i in range(0, self.num_states):
-        m.append({})
-
-    with open(filename, 'r') as f:
-        line = f.readline()
-        while line:
-            line = line.strip()
-            tokens = line.split(',')
-
-            i = int(tokens[0].strip())
-
-            for j in range(1, len(tokens)):
-                tks = tokens[j].split(':')
-                key = tks[0].strip()
-                val = float(tks[1].strip())
-                m[i][key] = float(val)
-
-            line = f.readline()
-
-    return m
-
-
-def dump_matrix(m):
-    for i in range(0, len(m)):
-        print(i, m[i])
-
-
-import sys
 if __name__ == '__main__':
     if len(sys.argv) != 4:
         print("Usage:", sys.argv[0], "<tm_file> <em_file> <observation_file>")
@@ -187,17 +172,17 @@ if __name__ == '__main__':
     obs_file = sys.argv[3]
 
     tm = load_matrix(tm_file)
-    #dump_matrix(tm)
+    # dump_matrix(tm)
 
     em = load_matrix(em_file)
-    #dump_matrix(em)
+    # dump_matrix(em)
 
     seq = load_observation_sequence(obs_file)
-    #print(len(seq))
-    #print(seq)
+    # print(len(seq))
+    # print(seq)
 
-    va = VertibiAlgorithm(tm, em, seq)
+    va = ViterbiAlgorithm(tm, em, seq)
     va.predict()
     va.dump_trace()
-    #va.dump_delta()
-    #va.dump_prevs()
+    # va.dump_delta()
+    # va.dump_prevs()
