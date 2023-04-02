@@ -6,6 +6,7 @@ from color_grid import ColorGrid, DIRECTIONS
 
 
 class TrainGrid:
+
     def __init__(self, grid) -> None:
         self.grid = grid
         self.num_cols = grid.num_cols
@@ -64,7 +65,7 @@ class TrainGrid:
 
     def calc_trans(self):
         for i in range(1, len(self.data_rows)):
-            move_from = self.data_rows[i-1][0]
+            move_from = self.data_rows[i - 1][0]
             move_to = self.data_rows[i][0]
 
             node = self.trans[move_from]
@@ -72,13 +73,13 @@ class TrainGrid:
 
             if move_to == move_from:
                 key = 'O'  # the transition is to stop at the original location
-            elif move_to == move_from-1:
+            elif move_to == move_from - 1:
                 # left
                 key = 'L'
             elif move_to == move_from + self.num_cols:
                 # up
                 key = 'U'
-            elif move_to == move_from+1:
+            elif move_to == move_from + 1:
                 # right
                 key = 'R'
             elif move_to == move_from - self.num_cols:
@@ -114,8 +115,10 @@ class TrainGrid:
             node = self.grid.get_node(i)
             t = self.trans[i]
             if t:
-                print('%s -> O:%2d, L:%5.2f, U:%5.2f, R:%5.2f, D:%5.2f, total: %2d' %
-                      (str(node), t['O'], t['L'], t['U'], t['R'], t['D'], t['SUM']))
+                print(
+                    '%s -> O:%2d, L:%5.2f, U:%5.2f, R:%5.2f, D:%5.2f, total: %2d'
+                    % (str(node), t['O'], t['L'], t['U'], t['R'], t['D'],
+                       t['SUM']))
             else:
                 print('%s -> ---' % str(node))
 
@@ -123,28 +126,33 @@ class TrainGrid:
         print("Total: %d" % total)
 
     def dump_prob_full(self):
+        format_str = "%7.4f"
         for i in range(0, self.grid.num_elements):
             node = self.grid.get_node(i)
             elems = []
 
             for j in range(0, self.grid.num_elements):
                 if j == i:
-                    elems.append("%2d:%7.4f" % (j, self.prob[i]['O']))
+                    elems.append(format_str % self.prob[i]['O'])
                     continue
 
                 is_neighbor = False
                 for d in DIRECTIONS:
                     nb = node.neighbors[d]
                     if nb and nb.id == j and not nb.is_empty():
-                        elems.append("%2d:%7.4f" % (j, self.prob[i][d]))
+                        elems.append(format_str % self.prob[i][d])
                         is_neighbor = True
-                
+
                 if not is_neighbor:
-                    elems.append("%2d: 0.0000" % j)
-                
-            print('%s -> %s' % (str(node), ', '.join(elems)))
+                    elems.append(format_str % 0)
 
+            # i->N, probability 1.
+            elems.append(format_str % 1)
 
+            print(', '.join(elems))
+
+        # N->i, probability 0.
+        print(', '.join([format_str % 0] * (self.grid.num_elements + 1)))
 
     def dump_train_data(self):
         print("----- dump train data: ------")
@@ -172,4 +180,3 @@ if __name__ == '__main__':
     traingrid.calc_prob()
     #traingrid.dump_prob()
     traingrid.dump_prob_full()
-    

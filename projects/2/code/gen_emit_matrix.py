@@ -6,6 +6,7 @@ from color_grid import ColorGrid, COLORS
 
 
 class TrainEmitGrid:
+
     def __init__(self, grid) -> None:
         self.grid = grid
         self.num_cols = grid.num_cols
@@ -45,7 +46,7 @@ class TrainEmitGrid:
 
             for c in COLORS:
                 if c == node.color:
-                    self.prob[i][c] = self.stats_adjacent['self']/total
+                    self.prob[i][c] = self.stats_adjacent['self'] / total
                 elif c in node.adjacent_colors:
                     self.prob[i][c] = self.stats_adjacent['near'] / \
                         (total*len(node.adjacent_colors))
@@ -57,11 +58,17 @@ class TrainEmitGrid:
         if header:
             print("----- dump emit probability: -----")
 
+        format_str = "%7.4f"
         for i in range(0, len(self.prob)):
             node = self.grid.get_node(i)
             t = self.prob[i]
-            print('%s -> r:%7.4f, g:%7.4f, b:%7.4f, y:%7.4f' %
-                  (str(node), t['r'], t['g'], t['b'], t['y']))
+            elems = []
+
+            for color in COLORS:
+                elems.append(format_str % t[color])
+
+            print(', '.join(elems))
+        print(', '.join([format_str % 0] * len(COLORS)))
 
     def get_emit_stats(self):
         for i in range(0, len(self.data_rows)):
@@ -108,10 +115,12 @@ class TrainEmitGrid:
             node = self.grid.get_node(i)
             t = self.emit_adjacent[i]
             print('%s -> self: %2d, near:%2d, away:%2d, total:%2d' %
-                  (str(node), t['self'], t['near'], t['away'], t['self']+t['near']+t['away']))
+                  (str(node), t['self'], t['near'], t['away'],
+                   t['self'] + t['near'] + t['away']))
 
         print("total -> self:%d, near: %d, away: %d" %
-              (self.stats_adjacent['self'], self.stats_adjacent['near'], self.stats_adjacent['away']))
+              (self.stats_adjacent['self'], self.stats_adjacent['near'],
+               self.stats_adjacent['away']))
 
     def dump_train_data(self, header=False):
         if header:

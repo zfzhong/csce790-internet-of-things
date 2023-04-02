@@ -7,12 +7,16 @@ EMPTY_COLOR = "*"
 DIRECTIONS = ['L', 'U', 'R', 'D']
 COLORS = ['r', 'g', 'b', 'y']
 
-OB2ID = {"r":0, "g":1, "b":2, "y":3}
+OB2ID = {"r": 0, "g": 1, "b": 2, "y": 3}
+NUM_COLS = 4
+
 
 def ob2id(ob):
     return OB2ID[ob]
 
+
 class DataMatrix:
+
     def __init__(self, num_rows, num_cols):
         self.num_rows = num_rows
         self.num_cols = num_cols
@@ -22,18 +26,18 @@ class DataMatrix:
     def check_bounds(self, i, description="index"):
         if i < 0 or i > self.num_rows:
             raise Exception("%s %d is out of bound" % (description, i))
-        
+
     def get(self, i, j):
         self.check_bounds(i, "row number")
         self.check_bounds(j, "column number")
-                
+
         idx = i * self.num_cols + j
         return self.get_element(idx)
 
     def get_element(self, i):
         if i >= self.num_elements:
             raise Exception("element id %d out of bound" % i)
-        
+
         return self.m[i]
 
     def add_element(self, val):
@@ -41,9 +45,9 @@ class DataMatrix:
         self.num_elements += 1
 
     def dump_matrix(self):
-        for i in range(self.num_rows,0,-1):
-            idx = (i-1) * self.num_cols
-            row = self.m[idx:idx+self.num_cols]
+        for i in range(self.num_rows, 0, -1):
+            idx = (i - 1) * self.num_cols
+            row = self.m[idx:idx + self.num_cols]
             print(' '.join([str(e) for e in row]))
 
     def dump_elements(self):
@@ -52,12 +56,13 @@ class DataMatrix:
 
 
 class GridNode:
+
     def __init__(self, grid, id, color=EMPTY_COLOR):
         self.grid = grid
         self.id = id
         self.color = color
         self.num_neighbors = 0
-        self.neighbors = {"L":None, "U":None, "R": None, "D": None}
+        self.neighbors = {"L": None, "U": None, "R": None, "D": None}
         self.adjacent_colors = []
 
     def is_empty(self):
@@ -76,7 +81,7 @@ class GridNode:
             raise Exception("direction % wrong" % direction)
 
         return self.neighbors[direction]
-    
+
     def dump_neighbors(self):
         dl = []
         for direction in DIRECTIONS:
@@ -85,10 +90,9 @@ class GridNode:
                 dl.append(str(nb))
             else:
                 dl.append('---,---')
-        
+
         print('%s: %s' % (self, ', '.join(dl)))
 
-        
     def __str__(self) -> str:
         return "(%2d, %s)" % (self.id, self.color)
 
@@ -97,10 +101,11 @@ class GridNode:
 
 
 class ColorGrid:
+
     def __init__(self):
         self.num_rows = 0
         self.num_cols = 0
-        self.mat = None        
+        self.mat = None
 
     @property
     def num_elements(self):
@@ -112,11 +117,11 @@ class ColorGrid:
     def get_node(self, i):
         if self.mat:
             return self.mat.get_element(i)
-        
+
         return None
 
     def init_from_file(self, filename):
-        with open (filename, 'r') as f:
+        with open(filename, 'r') as f:
             line = f.readline()
 
             # read size
@@ -134,15 +139,15 @@ class ColorGrid:
                 for e in tokens:
                     n = GridNode(self, i, e.strip())
 
-                    # build left-right neighbors 
+                    # build left-right neighbors
                     if i % self.num_cols > 0:
-                        lnode = self.mat.get_element(i-1)
+                        lnode = self.mat.get_element(i - 1)
                         lnode.set_neighbor(n, 'R')
-                        n.set_neighbor(lnode, 'L')       
+                        n.set_neighbor(lnode, 'L')
 
                     # build top-down neighbors
                     if i // self.num_cols > 0:
-                        dnode = self.mat.get_element(i-self.num_cols)
+                        dnode = self.mat.get_element(i - self.num_cols)
                         dnode.set_neighbor(n, 'U')
                         n.set_neighbor(dnode, 'D')
 
@@ -164,6 +169,3 @@ class ColorGrid:
         for i in range(0, self.mat.num_elements):
             node = self.mat.get_element(i)
             node.dump_neighbors()
-
-        
-
