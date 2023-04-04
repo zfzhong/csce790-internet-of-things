@@ -27,7 +27,7 @@ t = linspace(0, len, N + 1); % time ticks
 % Create the mixed signal and perform FFT.
 % ===================================
 y = 5 ... % frequency 0
-- 2 * cos(fa * t) ... % frequency 0.2
+    - 2 * cos(fa * t) ... % frequency 0.2
     + 3 * cos(5 * fa * t) ... % frequency 1.0
     + 8 * sin(20 * fa * t); % frequency 4.0
 
