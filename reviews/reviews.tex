@@ -406,4 +406,75 @@ Try to refine this approach to achieve better accuracy, and compare it with ECG.
 \noindent \textbf{Other comments or questions:}\\
 \emph{Any other comments, suggestions, or questions}.
 
+\newpage
+\section{Paper review, due 04/04/2023}
+\begin{center}
+\noindent
+\textbf{\Large Paper title: ``No Need to War-Drive: Unsupervised Indoor Localization''}
+\end{center}
+
+
+\noindent \textbf{Student's name and ID: }\\
+Zifei (David) Zhong, B70365610\\
+
+\noindent \textbf{Summary:}\\
+\emph{Briefly summarize the main ideas and the approach}.
+
+This paper proposes an unsupervised indoor localization approach that doesn't require war-driving. The proposed approach collects IMU data (accelerometer, gyroscope, magnetometer) and WiFi signal at different indoor locations and uses the features from these data to identify indoor landmarks. Based on feature matching, the location of users are identified (near landmarks). Experiments show that the proposed method achieves great indoor localization accuracy with median location errors of less than 2 meters.\\
+
+\noindent \textbf{Contributions:}\\
+\emph{What are the major issues addressed in the paper?}
+
+The major issue addressed in this paper is to localize human in indoor environments with an unsupervised approach, which achieves great accuracy and being calibration free (does not require war-driving). \\
+
+
+\noindent \emph{Do you consider them important?}
+
+Yes. Given previous approaches which require war-driving or calibration are either unrealistic or cumbersome  to real implementation, an unsupervised approach is much favorable. \\
+
+
+\noindent \emph{Comment on the novelty, creativity, and technical depth of the paper.}
+
+The novelty of the proposed approach is that landmarks can be learned in an unsupervised way, and the systems converges over time. Localization accuracy improves and errors get bounded when more users join into the system. It's also great to see that many landmarks exist in real environments such as office building and shopping malls. 
+
+This paper provides a great number of details about how the landmark idea is generated (urban sensing), seed landmarks and organic landmarks, landmark features (elevators, staircases, and escalators), methods for detecting landmarks, and dead reckoning. The environments used for experiments including both office building and shopping mall. The building of ground truth and measurements comparison are well presented. I consider the technical depth solid. \\
+
+
+
+\noindent \textbf{Strengths and Weaknesses:}\\
+\emph{What are the paper’s strengths? Be brief.}
+
+The strength is that it provides a feasible approach to achieve unsupervised indoor localization with great accuracy. The experiments validated the proposed approach.\\
+
+
+
+\noindent \emph{What are the paper's weaknesses? Be brief.}
+
+The weakness is that there are factors that might affect the performance of the approach, since the approach assumes great accuracy in collecting sensing data. For example, the author has also mentioned in the discussion that arbitrary phone orientation might cause problems. In their experiments, each user carries two phones and one phone has to `face up'. I consider the `face up' a strong assumption for achieving good performance.\\
+
+
+\noindent \textbf{Evaluation:}\\
+\emph{Comment on the paper's evaluation methodology.}
+
+The evaluation experiments include 3 users and 3 different buildings: two research building and one shopping mall. The largest area is about 4000 m$^2$. A prototype of the proposed system is implemented for Android smartphones. I am quite convinced by the way they build ground truth. Detecting landmarks and feature matching all look reasonable.\\
+
+\noindent \emph{Comment on the results.}
+
+The results validate the theory of the approach. More OLMs gets detected as more users walk around the building, and the localization accuracy improves over time. The approach achieves a mean instantaneous localization error 1.69m. I consider the results remarkable.\\
+
+
+\noindent \textbf{Future works:}\\
+\emph{Are there any issues or directions left open?}
+
+Yes. I believe localization is very related to the Hidden Markov Model (HMM) since the current location of a user is very tightly related to her previous location. If multiple landmarks are identified, the transition relationship between landmarks can also be generated. With HMM, it might help improve the localization accuracy/stability further.\\
+
+\noindent \emph{List a few possible extensions of this work.}
+
+Landmarks can also be viewed as hidden states, and IMU/WIFI signals can be viewed as observation. A hidden markov model can be built to help localization. When there are landmarks that share similar features, the original feature matching approach might result error, while HMM should resolve it. \\
+
+
+\noindent \textbf{Other comments or questions:}\\
+\emph{Any other comments, suggestions, or questions}.
+
+
 \end{document} 
