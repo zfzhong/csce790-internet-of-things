@@ -477,4 +477,76 @@ Landmarks can also be viewed as hidden states, and IMU/WIFI signals can be viewe
 \emph{Any other comments, suggestions, or questions}.
 
 
+\newpage
+\section{Paper review, due 04/11/2023}
+\begin{center}
+\noindent
+\textbf{\Large Paper title: ``Seismo: Blood Pressure Monitoring using Built-in Smartphone Accelerometer and Camera''}
+\end{center}
+
+
+\noindent \textbf{Student's name and ID: }\\
+Zifei (David) Zhong, B70365610\\
+
+\noindent \textbf{Summary:}\\
+\emph{Briefly summarize the main ideas and the approach}.
+
+This paper proposes an approach to turn a smartphone into a Blood Pressure Monitor simply by using the built-in accelerometer and camera, without extra hardware/sensor. The main idea is to put the smartphone against human's chest while using finger to cover the camera, and thus the built-in accelerometer helps detect the aortic valve opening time while the camera captures the PPG at the finger to measure the pulse's arrival. Once PTT (pulse transmit time) is captured, the blood pressure can be derived. Evaluation that involves 9 participants has shown good performance in measure DBP (94\% fall under 15 mmHg).\\
+
+\noindent \textbf{Contributions:}\\
+\emph{What are the major issues addressed in the paper?}
+
+The major issue addressed in this paper is to use smartphone to detect human blood pressure without using any extra hardware/sensors. \\
+
+
+\noindent \emph{Do you consider them important?}
+
+I consider this work interesting since it simply turned a smartphone as a blood pressure monitor. Comparing to previous work, the proposed approach is much more applicable since it is based on the built-in accelerometer and camera of a smartphone.\\
+
+
+\noindent \emph{Comment on the novelty, creativity, and technical depth of the paper.}
+
+It's quite novel since the proposed approach doesn't need any extra hardware/sensors.  The idea is very easy to understand. Whoever reads the ideas sees the applicability immediately.
+
+The authors has provided great details on PTT calculation based on SCG and PPG. The evaluation with 9 participants is enough to show the effectiveness of the proposed approach in monitoring blood pressure.\\
+
+
+
+\noindent \textbf{Strengths and Weaknesses:}\\
+\emph{What are the paper’s strengths? Be brief.}
+
+The major strength of this paper is that the proposed approach has far better applicability comparing to previous work on blood pressure monitoring via smartphones. 
+
+It's a simple idea and it just works.\\
+
+
+\newpage
+\noindent \emph{What are the paper's weaknesses? Be brief.}
+
+The weakness is that, as shown in the evaluation, the proposed method might not work for certain groups of people. For example, for people with thick body fat, putting a smartphone against her chest might not help detect the aortic valve opening, and the proposed approach will fail. \\
+
+
+\noindent \textbf{Evaluation:}\\
+\emph{Comment on the paper's evaluation methodology.}
+
+While I believe more participants will give better justification for the effectiveness of the proposed approach, I am generally convinced by the evaluation of the paper with 9 participants (2 got removed eventually). Multiple sessions and measurements are carried in the evaluation. It would be great if they have more participants divided by different age groups. The author also did comparison of the proposed method with other existing approaches.\\
+
+\noindent \emph{Comment on the results.}
+
+The proposed approach showed slightly lower accuracy compared to the-state-of-art approaches, however, it successfully demonstrated the effectiveness of using build-in SCG and PPG measurement achieves the same purpose.\\
+
+
+\noindent \textbf{Future works:}\\
+\emph{Are there any issues or directions left open?}
+
+An future work is to improve the accuracy (might be hard) or robustness (very possible) of the Seismo. \\
+
+\noindent \emph{List a few possible extensions of this work.}
+
+. \\
+
+
+\noindent \textbf{Other comments or questions:}\\
+\emph{Any other comments, suggestions, or questions}.
+
 \end{document} 
