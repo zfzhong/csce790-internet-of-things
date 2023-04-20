@@ -4,7 +4,7 @@
 % University of South Carolina
 % April 4, 2023
 %
-% Example 25: FFT with hanning window. When the frequencies of the input
+% Example 5: FFT with hanning window. When the frequencies of the input
 % signals are not multiples of the frequency resolution, the FFT will
 % result spreading of power across the spectrum. Applying hanning window
 % is an effective remedy. Please compare the two generated figures.
