@@ -18,6 +18,9 @@
 % 3. sampling rate: sampling_rate_sps = 1e7 samples per second (10000 samples per ms);
 % 4. FMCW slope: slope_hps = 29.982*1e6*1e6 Hz per second (29.982 MHz per us);
 
+close all; clear; clc;
+
+
 light_speed = physconst('lightspeed');
 adc_samples = 256;
 sampling_rate_sps = 1e7;

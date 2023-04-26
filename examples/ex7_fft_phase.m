@@ -4,12 +4,15 @@
 % University of South Carolina
 % April 20, 2023
 %
-% Example 7: Example to how to extract the phase of signals.
+% Example 7: Example to show how to extract the phase of signals.
 % (this example is taken from a Matlab web page)
 %
 % Mix two signals (one with frequency 15 and phase -pi/4, the other with
 % frequency 40 and phase pi/2) and plot the phases after FFT.
 %
+
+close all; clear; clc;
+
 
 fs = 100;
 t = 0:1/fs:1-1/fs;
